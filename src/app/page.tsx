@@ -1,9 +1,8 @@
-// Ludis — Premium Glassmorphism Landing Page Redesign
+// Ludis — Premium Glassmorphism Landing Page
+// Scroll animation applied via client-boundary motion wrappers.
 
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { LandingNav } from '@/components/landing/landing-nav';
-import { HeroProductPreview } from '@/components/landing/hero-product-preview';
+import { HeroSection } from '@/components/landing/hero-section';
 import { BaselineVisual } from '@/components/landing/baseline-visual';
 import { DataInsightSection } from '@/components/landing/data-insight-section';
 import { MvpPillars } from '@/components/landing/mvp-pillars';
@@ -30,47 +29,7 @@ export default function LandingPage() {
       <LandingNav />
 
       {/* ── HERO SECTION ── */}
-      <section className="pt-12 pb-24 px-4 sm:px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Hero Typography Left Column */}
-          <div className="lg:col-span-6 text-center lg:text-left space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full glass-subtle border-border-luminous px-4 py-1.5 text-xs font-mono font-semibold text-brand-primary shadow-lg">
-              <span className="h-2 w-2 rounded-full bg-brand-primary animate-ping" />
-              SPORTS-PERFORMANCE INTELLIGENCE ENGINE
-            </div>
-
-            <h1 className="text-4xl sm:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-[0.95] text-text-primary">
-              KNOW YOUR BODY.
-              <br />
-              <span className="bg-gradient-to-r from-brand-primary via-brand-primary-hover to-brand-cyan bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(0,200,150,0.35)]">
-                TRAIN SMARTER.
-              </span>
-            </h1>
-
-            <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal">
-              Ludis transforms your health and training telemetry into individualized performance, recovery, fatigue, and readiness insights built around your personal baseline.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-              <Link href="/signup" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto bg-brand-primary hover:bg-brand-primary-hover text-text-inverse font-extrabold text-sm uppercase tracking-wider rounded-xl px-8 py-3.5 shadow-[0_0_25px_rgba(0,200,150,0.35)]">
-                  Start Free
-                </Button>
-              </Link>
-              <a href="#baseline" className="w-full sm:w-auto">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto glass-subtle border-border-default hover:border-brand-primary/40 text-text-primary font-bold text-sm uppercase tracking-wider rounded-xl px-8 py-3.5">
-                  See How It Works
-                </Button>
-              </a>
-            </div>
-          </div>
-
-          {/* Hero Product Visualization Right Column */}
-          <div className="lg:col-span-6">
-            <HeroProductPreview />
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* ── PERSONAL BASELINE SECTION ── */}
       <BaselineVisual />

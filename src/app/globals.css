@@ -197,3 +197,118 @@ body {
   border-color: var(--border-strong);
   background-color: var(--surface-hover);
 }
+
+/* ============================================================
+   HERO PRODUCT PREVIEW — Glass Hierarchy & Entrance Motion
+   ============================================================ */
+
+/* Level 1: Outer application frame — darkest, most opaque */
+.glass-app-frame {
+  background: rgba(10, 14, 22, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(0, 200, 150, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Level 2: Content panels — medium glass */
+.glass-content {
+  background: rgba(15, 21, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Level 3: Elevated — readiness primary */
+.glass-elevated {
+  background: rgba(18, 26, 40, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Level 4: Accent — recommendation panel */
+.glass-accent {
+  background: rgba(0, 200, 150, 0.04);
+  border: 1px solid rgba(0, 200, 150, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Entrance Animations ── */
+
+@keyframes hero-preview-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hero-preview-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes hero-chart-draw {
+  from { stroke-dashoffset: 800; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes hero-chart-area-reveal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hero-preview-frame {
+  animation: hero-preview-fade-in 0.4s ease-out both;
+}
+
+.hero-preview-readiness {
+  animation: hero-preview-scale-in 0.35s ease-out 0.15s both;
+}
+
+.hero-preview-chart-line {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: hero-chart-draw 0.7s ease-out 0.3s forwards;
+}
+
+.hero-preview-chart-area {
+  opacity: 0;
+  animation: hero-chart-area-reveal 0.4s ease-out 0.6s forwards;
+}
+
+.hero-preview-chart-pulse {
+  opacity: 0;
+  animation: hero-chart-area-reveal 0.3s ease-out 0.8s forwards;
+}
+
+.hero-preview-supporting {
+  animation: hero-preview-fade-in 0.35s ease-out 0.4s both;
+}
+
+.hero-preview-action {
+  animation: hero-preview-fade-in 0.35s ease-out 0.55s both;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-preview-frame,
+  .hero-preview-readiness,
+  .hero-preview-supporting,
+  .hero-preview-action {
+    animation: none;
+  }
+
+  .hero-preview-chart-line {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+
+  .hero-preview-chart-area,
+  .hero-preview-chart-pulse {
+    opacity: 1;
+    animation: none;
+  }
+}

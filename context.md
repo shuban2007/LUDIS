@@ -28,6 +28,7 @@
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4 + Semantic CSS variables (`globals.css`)
+- **Animation**: `motion` (v12+, `motion/react`) for scroll-reveal and entrance animations. Reusable primitives in `src/components/landing/scroll-reveal.tsx`.
 - **Font**: Inter (`next/font/google`)
 - **Data Layer**: Service abstraction (`src/lib/services/data-service.ts`) backed by typed mock data (`src/lib/mock/`). Designed for Supabase PostgreSQL & Python ML API integration.
 - **Navigation Architecture**: Centralized route-driven navigation module (`src/lib/navigation.tsx`) providing canonical `athleteNavItems` & `coachNavItems` configurations and `isNavItemActive()` matching utility. Enforces exact matching on root dashboards (`/athlete`, `/coach`) and segment-aware prefix matching on child sections (`/athlete/profile`, `/coach/athletes`), ensuring exactly 1 navigation item is active for any route.
@@ -38,7 +39,7 @@
 ## Information Architecture & Routes
 
 ### Public & Auth
-- `/` — **Redesigned Landing Page**: High-end glassmorphic sports performance telemetry console aesthetic featuring the custom Gothic L logo, interactive baseline visualizer, raw data → explainable insight translator, 4 MVP capabilities pillars, athlete & coach role interfaces, 5-step intelligence pipeline, competition/environment context, and responsible AI ethical boundaries.
+- `/` — **Redesigned Landing Page**: Premium glassmorphic sports performance aesthetic with scroll-reveal animation system (`motion/react`). Features staggered hero entrance, viewport-triggered section reveals, and progressive pipeline animation. Hero includes realistic Ludis application preview, baseline visualizer, raw data → insight translator, 4 MVP pillars, athlete & coach interfaces, 5-step intelligence pipeline, competition context, and responsible AI boundaries. All animations trigger once, use transform/opacity only, and respect `prefers-reduced-motion`.
 - `/login` — **Redesigned Sign In Page**: Premium glassmorphic interface with `LudisLogo`, uppercase `SIGN IN` CTA, consistent dark input styling, and demoted isolated `DEMO` section (`[ ATHLETE ] [ COACH ]`) powered by `src/lib/auth/demo-auth.ts`.
 - `/signup` — **Redesigned Sign Up Page**: Premium glassmorphic interface with `LudisLogo`, icon-free segmented `I AM A` role selector (`[ ATHLETE ] [ COACH ]`), uppercase typography, keyboard accessible states, and `CREATE ACCOUNT` CTA.
 - `/onboarding` — Multi-step decision-relevant onboarding (sport, experience, competition context)
@@ -48,12 +49,14 @@
 ### Landing Page Component Library (`src/components/landing/`) & UI
 - `LudisLogo` (`src/components/ui/ludis-logo.tsx`) — Official brand logo component rendering `public/LudisLogo1.png` with aspect ratio preservation, high-contrast glass badge formatting, and responsive variant support (`navbar`, `footer`, `hero`, `compact`, `icon-only`).
 - `LandingNav` (`src/components/landing/landing-nav.tsx`) — Floating translucent glass navigation bar
-- `HeroProductPreview` (`src/components/landing/hero-product-preview.tsx`) — Layered glass telemetry console preview with baseline SVG curve & recommendation block
-- `BaselineVisual` (`src/components/landing/baseline-visual.tsx`) — Visual baseline normal range vs. current reading gauge
-- `DataInsightSection` (`src/components/landing/data-insight-section.tsx`) — Raw signals to Ludis explainable action pipeline
-- `MvpPillars` (`src/components/landing/mvp-pillars.tsx`) — Glassmorphism cards for the 4 MVP pillars
-- `AudienceSection` & `HowLudisThinks` (`src/components/landing/sections.tsx`) — Athlete/Coach interfaces and 5-step data-to-decision process
-- `CompetitionContext` & `ResponsibleAI` (`src/components/landing/sections.tsx`) — Event weather context & ethical decision support boundaries
+- `HeroSection` (`src/components/landing/hero-section.tsx`) — Client component wrapping hero copy + product preview with staggered `HeroReveal` entrance animations (eyebrow → headline → paragraph → CTAs → product preview)
+- `HeroProductPreview` (`src/components/landing/hero-product-preview.tsx`) — Realistic Ludis application surface preview showing one coherent athlete state: readiness-dominant hierarchy (82 Good), 10-day SVG performance trend with personal baseline band (76–80), compact recovery/fatigue supporting cards, contributing signals evidence row, human recommendation panel with accent glass, and upcoming session context. Mock data driven via `hero-preview-data.ts`. Uses 4-level glassmorphism hierarchy (`glass-app-frame` → `glass-content` → `glass-elevated` → `glass-accent`) with staggered entrance animations respecting `prefers-reduced-motion`.
+- `ScrollReveal`, `StaggerContainer`, `StaggerItem`, `HeroReveal` (`src/components/landing/scroll-reveal.tsx`) — Reusable motion primitives using `motion/react`. `ScrollReveal` fades+slides content on viewport entry (trigger once). `StaggerContainer`/`StaggerItem` provide staggered children reveals. `HeroReveal` animates immediately on mount with configurable delay. All disable under `prefers-reduced-motion`.
+- `BaselineVisual` (`src/components/landing/baseline-visual.tsx`) — Visual baseline normal range vs. current reading gauge with scroll-reveal animations
+- `DataInsightSection` (`src/components/landing/data-insight-section.tsx`) — Raw signals to Ludis explainable action pipeline with staggered left→center→right reveal
+- `MvpPillars` (`src/components/landing/mvp-pillars.tsx`) — Glassmorphism cards for the 4 MVP pillars with 80ms staggered entrance
+- `AudienceSection` & `HowLudisThinks` (`src/components/landing/sections.tsx`) — Athlete/Coach interfaces (staggered cards) and 5-step data-to-decision process (progressive 100ms stagger)
+- `CompetitionContext` & `ResponsibleAI` (`src/components/landing/sections.tsx`) — Event weather context & ethical decision support boundaries with minimal scroll reveals
 
 
 ### Athlete Experience (`/athlete/*`)
