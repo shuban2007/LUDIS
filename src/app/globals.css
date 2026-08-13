@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+/* ============================================================
+   LUDIS DESIGN SYSTEM
+   Sports Performance Intelligence Platform
+   Dark-first with semantic design tokens
+   ============================================================ */
+
+:root {
+  /* --- Surface System --- */
+  --surface-ground: #0b0e14;
+  --surface-base: #111520;
+  --surface-elevated: #171c2a;
+  --surface-overlay: #1e2436;
+  --surface-hover: #252c40;
+
+  /* --- Foreground System --- */
+  --text-primary: #eaf0f6;
+  --text-secondary: #9ba4b5;
+  --text-muted: #636d82;
+  --text-inverse: #0b0e14;
+
+  /* --- Border System --- */
+  --border-default: #252c40;
+  --border-subtle: #1e2436;
+  --border-strong: #3a4459;
+
+  /* --- Brand --- */
+  --brand-primary: #00c896;
+  --brand-primary-hover: #00e0a8;
+  --brand-primary-muted: rgba(0, 200, 150, 0.12);
+  --brand-accent: #3b82f6;
+  --brand-accent-muted: rgba(59, 130, 246, 0.12);
+
+  /* --- Status: Positive --- */
+  --status-positive: #00c896;
+  --status-positive-bg: rgba(0, 200, 150, 0.10);
+  --status-positive-border: rgba(0, 200, 150, 0.25);
+
+  /* --- Status: Warning --- */
+  --status-warning: #f5a623;
+  --status-warning-bg: rgba(245, 166, 35, 0.10);
+  --status-warning-border: rgba(245, 166, 35, 0.25);
+
+  /* --- Status: Risk / Elevated --- */
+  --status-risk: #ef5350;
+  --status-risk-bg: rgba(239, 83, 80, 0.10);
+  --status-risk-border: rgba(239, 83, 80, 0.25);
+
+  /* --- Status: Informational --- */
+  --status-info: #3b82f6;
+  --status-info-bg: rgba(59, 130, 246, 0.10);
+  --status-info-border: rgba(59, 130, 246, 0.25);
+
+  /* --- Focus --- */
+  --ring-focus: rgba(0, 200, 150, 0.5);
+
+  /* --- Confidence Spectrum --- */
+  --confidence-high: #00c896;
+  --confidence-moderate: #f5a623;
+  --confidence-low: #ef5350;
+
+  /* --- Chart Colors --- */
+  --chart-primary: #00c896;
+  --chart-secondary: #3b82f6;
+  --chart-baseline: #636d82;
+  --chart-deviation-positive: #00c896;
+  --chart-deviation-negative: #ef5350;
+  --chart-grid: #1e2436;
+  --chart-area-fill: rgba(0, 200, 150, 0.08);
+
+  /* --- Shadows --- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  /* --- Radii --- */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* --- Transitions --- */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+/* ============================================================
+   TAILWIND v4 THEME INTEGRATION
+   Map CSS variables to Tailwind utility classes
+   ============================================================ */
+
+@theme inline {
+  /* Fonts */
+  --font-sans: "Inter", var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;
+
+  /* Colors */
+  --color-surface-ground: var(--surface-ground);
+  --color-surface-base: var(--surface-base);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+
+  --color-border-default: var(--border-default);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-primary-muted: var(--brand-primary-muted);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-muted: var(--brand-accent-muted);
+
+  --color-status-positive: var(--status-positive);
+  --color-status-positive-bg: var(--status-positive-bg);
+  --color-status-positive-border: var(--status-positive-border);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-warning-border: var(--status-warning-border);
+  --color-status-risk: var(--status-risk);
+  --color-status-risk-bg: var(--status-risk-bg);
+  --color-status-risk-border: var(--status-risk-border);
+  --color-status-info: var(--status-info);
+  --color-status-info-bg: var(--status-info-bg);
+  --color-status-info-border: var(--status-info-border);
+
+  --color-ring-focus: var(--ring-focus);
+
+  --color-confidence-high: var(--confidence-high);
+  --color-confidence-moderate: var(--confidence-moderate);
+  --color-confidence-low: var(--confidence-low);
+
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-secondary: var(--chart-secondary);
+  --color-chart-baseline: var(--chart-baseline);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-area-fill: var(--chart-area-fill);
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--surface-ground);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  min-height: 100dvh;
+}
+
+/* ============================================================
+   FOCUS STYLES (Accessibility)
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   SCROLLBAR (Subtle dark scrollbar)
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+
+::selection {
+  background-color: var(--brand-primary-muted);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.ludis-card {
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.ludis-card-interactive {
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  transition: border-color var(--transition-normal), background-color var(--transition-normal);
+}
+
+.ludis-card-interactive:hover {
+  border-color: var(--border-strong);
+  background-color: var(--surface-hover);
+}
+
+.ludis-section-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Status card variants */
+.ludis-status-positive {
+  border-left: 3px solid var(--status-positive);
+  background-color: var(--status-positive-bg);
+}
+
+.ludis-status-warning {
+  border-left: 3px solid var(--status-warning);
+  background-color: var(--status-warning-bg);
+}
+
+.ludis-status-risk {
+  border-left: 3px solid var(--status-risk);
+  background-color: var(--status-risk-bg);
+}
+
+.ludis-status-info {
+  border-left: 3px solid var(--status-info);
+  background-color: var(--status-info-bg);
+}
