@@ -42,7 +42,7 @@
 - `/onboarding` — Multi-step decision-relevant onboarding (sport, experience, competition context)
 
 ### Landing Page Component Library (`src/components/landing/`) & UI
-- `LudisLogo` (`src/components/ui/ludis-logo.tsx`) — Custom sharp geometric SVG Gothic L monogram & wordmark
+- `LudisLogo` (`src/components/ui/ludis-logo.tsx`) — Official brand logo component rendering `public/LudisLogo1.png` with aspect ratio preservation, high-contrast glass badge formatting, and responsive variant support (`navbar`, `footer`, `hero`, `compact`, `icon-only`).
 - `LandingNav` (`src/components/landing/landing-nav.tsx`) — Floating translucent glass navigation bar
 - `HeroProductPreview` (`src/components/landing/hero-product-preview.tsx`) — Layered glass telemetry console preview with baseline SVG curve & recommendation block
 - `BaselineVisual` (`src/components/landing/baseline-visual.tsx`) — Visual baseline normal range vs. current reading gauge
