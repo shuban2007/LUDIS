@@ -235,7 +235,7 @@ export function LandingFooter() {
   return (
     <footer className="py-12 px-4 sm:px-6 max-w-7xl mx-auto border-t border-border-subtle text-xs text-text-muted">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-        <LudisLogo variant="full" size="sm" />
+        <LudisLogo linkToHome variant="footer" size="sm" />
         <div className="flex flex-wrap items-center gap-6">
           <a href="#baseline" className="hover:text-text-primary transition-colors">Baseline</a>
           <a href="#capabilities" className="hover:text-text-primary transition-colors">Capabilities</a>

@@ -20,6 +20,9 @@ export const metadata: Metadata = {
     "fatigue monitoring",
     "training insights",
   ],
+  icons: {
+    icon: "/LudisLogo1.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

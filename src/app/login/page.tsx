@@ -8,6 +8,8 @@ import { useAuth } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
+import { LudisLogo } from '@/components/ui/ludis-logo';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,11 +31,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-surface-ground px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="h-10 w-10 rounded-xl bg-brand-primary flex items-center justify-center">
-            <span className="text-lg font-bold text-text-inverse">L</span>
-          </div>
-          <span className="text-2xl font-bold text-text-primary tracking-tight">Ludis</span>
+        <div className="flex justify-center mb-8">
+          <LudisLogo linkToHome variant="hero" size="lg" />
         </div>
 
         <div className="ludis-card">

@@ -8,9 +8,7 @@ export function LandingNav() {
   return (
     <header className="sticky top-4 z-50 px-4 sm:px-6 max-w-7xl mx-auto mb-6">
       <nav className="glass-subtle rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300">
-        <Link href="/" className="flex items-center gap-2 group">
-          <LudisLogo variant="full" size="md" />
-        </Link>
+        <LudisLogo linkToHome variant="navbar" size="md" />
 
         {/* Center Links */}
         <div className="hidden md:flex items-center gap-8 text-xs font-medium text-text-secondary">

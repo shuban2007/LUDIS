@@ -16,6 +16,7 @@ import {
   ProfileIcon,
 } from '@/components/ui/icons';
 import type { NavItem } from '@/components/ui/sidebar';
+import { LudisLogo } from '@/components/ui/ludis-logo';
 
 const coachNavItems: NavItem[] = [
   { label: 'Dashboard', href: '/coach', icon: <DashboardIcon /> },
@@ -43,12 +44,7 @@ export function CoachShell({ children }: { children: ReactNode }) {
           />
           <div className="lg:hidden fixed left-0 top-0 bottom-0 w-60 z-50 bg-surface-base border-r border-border-subtle">
             <div className="flex items-center justify-between px-5 h-14 border-b border-border-subtle">
-              <div className="flex items-center gap-2">
-                <div className="h-6 w-6 rounded-md bg-brand-primary flex items-center justify-center">
-                  <span className="text-xs font-bold text-text-inverse">L</span>
-                </div>
-                <span className="text-sm font-bold text-text-primary">Ludis</span>
-              </div>
+              <LudisLogo linkToHome variant="compact" size="sm" />
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-1.5 rounded-md text-text-secondary hover:bg-surface-hover"

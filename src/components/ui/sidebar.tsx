@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 
+import { LudisLogo } from '@/components/ui/ludis-logo';
+
 export interface NavItem {
   label: string;
   href: string;
@@ -19,17 +21,14 @@ interface SidebarProps {
   footer?: ReactNode;
 }
 
-export function Sidebar({ items, title = 'Ludis', footer }: SidebarProps) {
+export function Sidebar({ items, footer }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-60 lg:shrink-0 bg-surface-base border-r border-border-subtle h-screen sticky top-0">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 h-14 border-b border-border-subtle shrink-0">
-        <div className="h-7 w-7 rounded-lg bg-brand-primary flex items-center justify-center">
-          <span className="text-sm font-bold text-text-inverse">L</span>
-        </div>
-        <span className="text-base font-bold text-text-primary tracking-tight">{title}</span>
+      <div className="flex items-center px-5 h-14 border-b border-border-subtle shrink-0">
+        <LudisLogo linkToHome variant="compact" size="sm" />
       </div>
 
       {/* Navigation */}

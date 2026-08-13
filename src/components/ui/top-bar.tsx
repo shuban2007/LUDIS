@@ -5,6 +5,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
+import { LudisLogo } from '@/components/ui/ludis-logo';
 
 interface TopBarProps {
   notificationCount?: number;
@@ -39,11 +40,8 @@ export function TopBar({
         )}
 
         {/* Mobile logo */}
-        <div className="lg:hidden flex items-center gap-2">
-          <div className="h-6 w-6 rounded-md bg-brand-primary flex items-center justify-center">
-            <span className="text-xs font-bold text-text-inverse">L</span>
-          </div>
-          <span className="text-sm font-bold text-text-primary">Ludis</span>
+        <div className="lg:hidden flex items-center">
+          <LudisLogo linkToHome variant="compact" size="sm" />
         </div>
       </div>
 
