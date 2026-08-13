@@ -30,6 +30,8 @@
 - **Styling**: Tailwind CSS v4 + Semantic CSS variables (`globals.css`)
 - **Font**: Inter (`next/font/google`)
 - **Data Layer**: Service abstraction (`src/lib/services/data-service.ts`) backed by typed mock data (`src/lib/mock/`). Designed for Supabase PostgreSQL & Python ML API integration.
+- **Navigation Architecture**: Centralized route-driven navigation module (`src/lib/navigation.tsx`) providing canonical `athleteNavItems` & `coachNavItems` configurations and `isNavItemActive()` matching utility. Enforces exact matching on root dashboards (`/athlete`, `/coach`) and segment-aware prefix matching on child sections (`/athlete/profile`, `/coach/athletes`), ensuring exactly 1 navigation item is active for any route.
+
 
 ---
 
@@ -37,9 +39,11 @@
 
 ### Public & Auth
 - `/` — **Redesigned Landing Page**: High-end glassmorphic sports performance telemetry console aesthetic featuring the custom Gothic L logo, interactive baseline visualizer, raw data → explainable insight translator, 4 MVP capabilities pillars, athlete & coach role interfaces, 5-step intelligence pipeline, competition/environment context, and responsible AI ethical boundaries.
-- `/login` — Login flow (supports athlete and coach account simulation)
-- `/signup` — Account creation with role selection (`athlete` | `coach`)
+- `/login` — **Redesigned Sign In Page**: Premium glassmorphic interface with `LudisLogo`, uppercase `SIGN IN` CTA, consistent dark input styling, and demoted isolated `DEMO` section (`[ ATHLETE ] [ COACH ]`) powered by `src/lib/auth/demo-auth.ts`.
+- `/signup` — **Redesigned Sign Up Page**: Premium glassmorphic interface with `LudisLogo`, icon-free segmented `I AM A` role selector (`[ ATHLETE ] [ COACH ]`), uppercase typography, keyboard accessible states, and `CREATE ACCOUNT` CTA.
 - `/onboarding` — Multi-step decision-relevant onboarding (sport, experience, competition context)
+- `src/lib/auth/demo-auth.ts` — Isolated demo authentication module delegating role-based demo logins without exposing credentials or instructions in the UI.
+
 
 ### Landing Page Component Library (`src/components/landing/`) & UI
 - `LudisLogo` (`src/components/ui/ludis-logo.tsx`) — Official brand logo component rendering `public/LudisLogo1.png` with aspect ratio preservation, high-contrast glass badge formatting, and responsive variant support (`navbar`, `footer`, `hero`, `compact`, `icon-only`).

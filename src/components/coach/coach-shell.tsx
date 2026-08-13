@@ -5,45 +5,36 @@
 
 import type { ReactNode } from 'react';
 import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/ui/sidebar';
 import { TopBar } from '@/components/ui/top-bar';
-import {
-  DashboardIcon,
-  TeamIcon,
-  AthletesIcon,
-  EventsIcon,
-  NotificationsIcon,
-  ProfileIcon,
-} from '@/components/ui/icons';
-import type { NavItem } from '@/components/ui/sidebar';
 import { LudisLogo } from '@/components/ui/ludis-logo';
-
-const coachNavItems: NavItem[] = [
-  { label: 'Dashboard', href: '/coach', icon: <DashboardIcon /> },
-  { label: 'Teams', href: '/coach/teams', icon: <TeamIcon /> },
-  { label: 'Athletes', href: '/coach/athletes', icon: <AthletesIcon /> },
-  { label: 'Events', href: '/coach/events', icon: <EventsIcon /> },
-  { label: 'Notifications', href: '/coach/notifications', icon: <NotificationsIcon /> },
-  { label: 'Profile', href: '/coach/profile', icon: <ProfileIcon /> },
-];
+import { useAuth } from '@/lib/auth';
+import { getUnreadCount } from '@/lib/services/data-service';
+import { coachNavItems, isNavItemActive } from '@/lib/navigation';
 
 export function CoachShell({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { user } = useAuth();
+  const userId = user?.id ?? 'usr-006';
+  const notificationCount = getUnreadCount(userId);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-surface-ground">
       <Sidebar items={coachNavItems} />
 
-      {/* Mobile sidebar overlay */}
+      {/* Mobile sidebar overlay drawer */}
       {mobileMenuOpen && (
         <>
           <div
-            className="lg:hidden fixed inset-0 bg-black/60 z-40"
+            className="lg:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
-          <div className="lg:hidden fixed left-0 top-0 bottom-0 w-60 z-50 bg-surface-base border-r border-border-subtle">
-            <div className="flex items-center justify-between px-5 h-14 border-b border-border-subtle">
+          <div className="lg:hidden fixed left-0 top-0 bottom-0 w-60 z-50 bg-surface-base border-r border-border-subtle shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between px-5 h-14 border-b border-border-subtle shrink-0">
               <LudisLogo linkToHome variant="compact" size="sm" />
               <button
                 onClick={() => setMobileMenuOpen(false)}
@@ -55,19 +46,28 @@ export function CoachShell({ children }: { children: ReactNode }) {
                 </svg>
               </button>
             </div>
-            <nav className="py-3 px-3">
+            <nav className="flex-1 overflow-y-auto py-3 px-3">
               <ul className="space-y-0.5">
-                {coachNavItems.map((item) => (
-                  <li key={item.href}>
-                    <a
-                      href={item.href}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-hover"
-                    >
-                      <span className="[&>svg]:h-[18px] [&>svg]:w-[18px]">{item.icon}</span>
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
+                {coachNavItems.map((item) => {
+                  const isActive = isNavItemActive(pathname, item);
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                          isActive
+                            ? 'bg-brand-primary-muted text-brand-primary border border-brand-primary/30 font-semibold'
+                            : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'
+                        }`}
+                        aria-current={isActive ? 'page' : undefined}
+                      >
+                        <span className="shrink-0 [&>svg]:h-[18px] [&>svg]:w-[18px]">{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
           </div>
@@ -76,7 +76,7 @@ export function CoachShell({ children }: { children: ReactNode }) {
 
       <div className="flex-1 flex flex-col min-w-0">
         <TopBar
-          notificationCount={2}
+          notificationCount={notificationCount}
           notificationHref="/coach/notifications"
           profileHref="/coach/profile"
           onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}

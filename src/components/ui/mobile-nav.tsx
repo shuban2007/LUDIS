@@ -5,7 +5,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { NavItem } from '@/components/ui/sidebar';
+import { isNavItemActive, type NavItem } from '@/lib/navigation';
 
 interface MobileNavProps {
   items: NavItem[];
@@ -18,18 +18,18 @@ export function MobileNav({ items }: MobileNavProps) {
 
   return (
     <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface-base border-t border-border-subtle safe-bottom"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface-base border-t border-border-subtle safe-bottom backdrop-blur-lg bg-surface-base/95"
       aria-label="Mobile navigation"
     >
       <ul className="flex items-center justify-around h-14">
         {visibleItems.map((item) => {
-          const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+          const isActive = isNavItemActive(pathname, item);
           return (
             <li key={item.href} className="flex-1">
               <Link
                 href={item.href}
-                className={`flex flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-medium transition-colors ${
-                  isActive ? 'text-brand-primary' : 'text-text-muted'
+                className={`flex flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-bold transition-colors ${
+                  isActive ? 'text-brand-primary' : 'text-text-muted hover:text-text-secondary'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >

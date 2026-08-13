@@ -6,14 +6,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
-
 import { LudisLogo } from '@/components/ui/ludis-logo';
+import { isNavItemActive, type NavItem } from '@/lib/navigation';
 
-export interface NavItem {
-  label: string;
-  href: string;
-  icon: ReactNode;
-}
+export type { NavItem };
 
 interface SidebarProps {
   items: NavItem[];
@@ -35,14 +31,14 @@ export function Sidebar({ items, footer }: SidebarProps) {
       <nav className="flex-1 overflow-y-auto py-3 px-3" aria-label="Main navigation">
         <ul className="space-y-0.5">
           {items.map((item) => {
-            const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+            const isActive = isNavItemActive(pathname, item);
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150 ${
                     isActive
-                      ? 'bg-brand-primary-muted text-brand-primary'
+                      ? 'bg-brand-primary-muted text-brand-primary border border-brand-primary/30 font-semibold'
                       : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'
                   }`}
                   aria-current={isActive ? 'page' : undefined}
