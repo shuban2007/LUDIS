@@ -36,10 +36,21 @@
 ## Information Architecture & Routes
 
 ### Public & Auth
-- `/` — Public landing page (capabilities, responsible AI, non-medical positioning)
+- `/` — **Redesigned Landing Page**: High-end glassmorphic sports performance telemetry console aesthetic featuring the custom Gothic L logo, interactive baseline visualizer, raw data → explainable insight translator, 4 MVP capabilities pillars, athlete & coach role interfaces, 5-step intelligence pipeline, competition/environment context, and responsible AI ethical boundaries.
 - `/login` — Login flow (supports athlete and coach account simulation)
 - `/signup` — Account creation with role selection (`athlete` | `coach`)
 - `/onboarding` — Multi-step decision-relevant onboarding (sport, experience, competition context)
+
+### Landing Page Component Library (`src/components/landing/`) & UI
+- `LudisLogo` (`src/components/ui/ludis-logo.tsx`) — Custom sharp geometric SVG Gothic L monogram & wordmark
+- `LandingNav` (`src/components/landing/landing-nav.tsx`) — Floating translucent glass navigation bar
+- `HeroProductPreview` (`src/components/landing/hero-product-preview.tsx`) — Layered glass telemetry console preview with baseline SVG curve & recommendation block
+- `BaselineVisual` (`src/components/landing/baseline-visual.tsx`) — Visual baseline normal range vs. current reading gauge
+- `DataInsightSection` (`src/components/landing/data-insight-section.tsx`) — Raw signals to Ludis explainable action pipeline
+- `MvpPillars` (`src/components/landing/mvp-pillars.tsx`) — Glassmorphism cards for the 4 MVP pillars
+- `AudienceSection` & `HowLudisThinks` (`src/components/landing/sections.tsx`) — Athlete/Coach interfaces and 5-step data-to-decision process
+- `CompetitionContext` & `ResponsibleAI` (`src/components/landing/sections.tsx`) — Event weather context & ethical decision support boundaries
+
 
 ### Athlete Experience (`/athlete/*`)
 - `/athlete` — **Athlete Dashboard** (Hierarchy: Current State → Trend → Factors + Confidence → Recommendation → Upcoming Event → Alerts)
