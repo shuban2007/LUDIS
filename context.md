@@ -31,7 +31,8 @@
 - **Animation**: `motion` (v12+, `motion/react`) for scroll-reveal and entrance animations. Reusable primitives in `src/components/landing/scroll-reveal.tsx`.
 - **Font**: Inter (`next/font/google`)
 - **Data Layer**: Service abstraction (`src/lib/services/data-service.ts`) backed by typed mock data (`src/lib/mock/`). Designed for Supabase PostgreSQL & Python ML API integration.
-- **Navigation Architecture**: Centralized route-driven navigation module (`src/lib/navigation.tsx`) providing canonical `athleteNavItems` & `coachNavItems` configurations and `isNavItemActive()` matching utility. Enforces exact matching on root dashboards (`/athlete`, `/coach`) and segment-aware prefix matching on child sections (`/athlete/profile`, `/coach/athletes`), ensuring exactly 1 navigation item is active for any route.
+- **Navigation Architecture**: Centralized route-driven navigation module (`src/lib/navigation.tsx`) providing canonical `athleteNavItems` & `coachNavItems` configurations and `isNavItemActive()` matching utility. Enforces exact matching on root dashboards (`/athlete`, `/coach`) and segment-aware prefix matching on child sections (`/athlete/profile`, `/coach/athletes`), ensuring exactly 1 navigation item is active for any route. Includes nav focus isolation (`.nav-item:focus { outline: none; }` and `.nav-item:focus-visible`) preventing persistent mouse focus borders when switching routes while preserving keyboard accessibility.
+
 
 
 ---
@@ -39,18 +40,22 @@
 ## Information Architecture & Routes
 
 ### Public & Auth
-- `/` — **Redesigned Landing Page**: Premium glassmorphic sports performance aesthetic with scroll-reveal animation system (`motion/react`). Features staggered hero entrance, viewport-triggered section reveals, and progressive pipeline animation. Hero includes realistic Ludis application preview, baseline visualizer, raw data → insight translator, 4 MVP pillars, athlete & coach interfaces, 5-step intelligence pipeline, competition context, and responsible AI boundaries. All animations trigger once, use transform/opacity only, and respect `prefers-reduced-motion`.
-- `/login` — **Redesigned Sign In Page**: Premium glassmorphic interface with `LudisLogo`, uppercase `SIGN IN` CTA, consistent dark input styling, and demoted isolated `DEMO` section (`[ ATHLETE ] [ COACH ]`) powered by `src/lib/auth/demo-auth.ts`.
-- `/signup` — **Redesigned Sign Up Page**: Premium glassmorphic interface with `LudisLogo`, icon-free segmented `I AM A` role selector (`[ ATHLETE ] [ COACH ]`), uppercase typography, keyboard accessible states, and `CREATE ACCOUNT` CTA.
+- `/` — **Redesigned Landing Page**: Premium dark sports technology visual style featuring high-density material surfaces, hierarchical card-depth tokens, and highly restrained use of brand teal accents. Retains the scroll-reveal animation system (`motion/react`) including staggered hero entrance, viewport-triggered section reveals, and progressive pipeline animation. All landing page Sign In / Get Started CTAs are intercepted by `AuthModal`.
+- `/login` — **Legacy Sign In Route**: Server-side redirects to `/` where the premium `AuthModal` handles signing in.
+- `/signup` — **Legacy Sign Up Route**: Server-side redirects to `/` where the premium `AuthModal` handles account creation.
+
 - `/onboarding` — Multi-step decision-relevant onboarding (sport, experience, competition context)
-- `src/lib/auth/demo-auth.ts` — Isolated demo authentication module delegating role-based demo logins without exposing credentials or instructions in the UI.
+- `src/lib/auth/auth-modal-context.tsx` — Reusable authentication modal state manager controlling visibility (`isOpen`), active view switching (`signin` vs `signup`), and document focus restoration state.
+- `src/lib/auth/demo-auth.ts` — Isolated demo authentication service hosting credentials, feature flag `DEMO_AUTH_ENABLED`, and auto-login helper wrappers.
+- `src/components/auth/auth-modal.tsx` — Premium centered glass overlay dialog featuring top curved specular light highlight, custom SVG fields, Framer Motion entry/exit/crossfade animations, body scroll lock, and keyboard focus trap.
+- `src/components/auth/demo-login.tsx` — Secondary conditional component rendering clean separator divider and quick ATHLETE and COACH auto-logins with button busy indicator states.
 
 
 ### Landing Page Component Library (`src/components/landing/`) & UI
-- `LudisLogo` (`src/components/ui/ludis-logo.tsx`) — Official brand logo component rendering `public/LudisLogo1.png` with aspect ratio preservation, high-contrast glass badge formatting, and responsive variant support (`navbar`, `footer`, `hero`, `compact`, `icon-only`).
-- `LandingNav` (`src/components/landing/landing-nav.tsx`) — Floating translucent glass navigation bar
+- `LudisLogo` (`src/components/ui/ludis-logo.tsx`) — Official brand logo component rendering `public/LudisLogo1.png` with aspect ratio preservation, high-contrast slate glass badge formatting, and responsive variant support (`navbar`, `footer`, `hero`, `compact`, `icon-only`).
+- `LandingNav` (`src/components/landing/landing-nav.tsx`) — Floating translucent glass navigation bar styled with Depth 2.
 - `HeroSection` (`src/components/landing/hero-section.tsx`) — Client component wrapping hero copy + product preview with staggered `HeroReveal` entrance animations (eyebrow → headline → paragraph → CTAs → product preview)
-- `HeroProductPreview` (`src/components/landing/hero-product-preview.tsx`) — Realistic Ludis application surface preview showing one coherent athlete state: readiness-dominant hierarchy (82 Good), 10-day SVG performance trend with personal baseline band (76–80), compact recovery/fatigue supporting cards, contributing signals evidence row, human recommendation panel with accent glass, and upcoming session context. Mock data driven via `hero-preview-data.ts`. Uses 4-level glassmorphism hierarchy (`glass-app-frame` → `glass-content` → `glass-elevated` → `glass-accent`) with staggered entrance animations respecting `prefers-reduced-motion`.
+- `HeroProductPreview` (`src/components/landing/hero-product-preview.tsx`) — Realistic Ludis application surface preview showing one coherent athlete state. Uses the refined 3-level card-depth system: `glass-app-frame` styled with Depth 3, readiness card styled with Depth 2, supporting panels with Depth 1, and the recommendation panel styled with Depth 3 featuring a solid left brand border highlight. Features subtle desktop mouse-driven 3D perspective tilt (disabled on mobile and reduced-motion settings) and tabular metric alignments.
 - `ScrollReveal`, `StaggerContainer`, `StaggerItem`, `HeroReveal` (`src/components/landing/scroll-reveal.tsx`) — Reusable motion primitives using `motion/react`. `ScrollReveal` fades+slides content on viewport entry (trigger once). `StaggerContainer`/`StaggerItem` provide staggered children reveals. `HeroReveal` animates immediately on mount with configurable delay. All disable under `prefers-reduced-motion`.
 - `BaselineVisual` (`src/components/landing/baseline-visual.tsx`) — Visual baseline normal range vs. current reading gauge with scroll-reveal animations
 - `DataInsightSection` (`src/components/landing/data-insight-section.tsx`) — Raw signals to Ludis explainable action pipeline with staggered left→center→right reveal
@@ -60,7 +65,10 @@
 
 
 ### Athlete Experience (`/athlete/*`)
-- `/athlete` — **Athlete Dashboard** (Hierarchy: Current State → Trend → Factors + Confidence → Recommendation → Upcoming Event → Alerts)
+- `/athlete` — **Redesigned Athlete Dashboard**: Production implementation matching `Athlete Dash.png` visual reference. Features Playfair Display serif page header ("Good morning, Alex."), date picker control, 4-column anodized KPI summary card (Readiness 82, Performance 83, Recovery 76, Fatigue Moderate) with vertical dividers, 70%/30% desktop split grid, 10-day SVG performance trend chart with baseline band (76–80) and highlighted active point ring (`src/components/athlete/dashboard-trend-chart.tsx`), Key Contributors card (HRV 64 ms, Sleep 7h 12m, Training Load 380 AU), Recommended Today card, Today's Session card ("Speed & Conditioning"), and Upcoming Competition card ("vs Riverview FC").
+- `src/lib/types/athlete-dashboard.ts` — `AthleteDashboardData` interface contract.
+- `src/lib/mock/athlete-dashboard.ts` — Mock dashboard dataset powering athlete performance view.
+- `src/components/athlete/athlete-dashboard-view.tsx` — Core dashboard view component with staggered entrance animations (`motion/react`) and responsive single-column mobile/tablet recomposition.
 - `/athlete/performance` — Baseline comparisons, PPI score, deviation significance
 - `/athlete/recovery` — Recovery score, multi-signal factors, confidence, history
 - `/athlete/fatigue` — Fatigue indicators (primary/supporting), workload context, responsible language actions
@@ -69,6 +77,7 @@
 - `/athlete/progress` — Multi-metric trend analysis over time
 - `/athlete/notifications` — Notification center
 - `/athlete/profile` — Athlete profile & coach access permission management
+
 
 ### Coach Experience (`/coach/*`)
 - `/coach` — **Coach Dashboard** (Team readiness distribution, active alerts, athlete cards)

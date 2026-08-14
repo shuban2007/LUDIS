@@ -17,7 +17,7 @@ export function AthleteShell({ children }: { children: ReactNode }) {
   const notificationCount = getUnreadCount(userId);
 
   return (
-    <div className="flex min-h-screen bg-surface-ground">
+    <div className="flex min-h-screen bg-[#000000] text-text-primary">
       <Sidebar items={athleteNavItems} />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -27,7 +27,7 @@ export function AthleteShell({ children }: { children: ReactNode }) {
           profileHref="/athlete/profile"
         />
 
-        <main className="flex-1 p-4 lg:p-6 pb-20 lg:pb-6">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8">
           {children}
         </main>
       </div>
@@ -36,3 +36,4 @@ export function AthleteShell({ children }: { children: ReactNode }) {
     </div>
   );
 }
+

@@ -11,3 +11,5 @@ export type * from './recommendation';
 export type * from './training';
 export type * from './notification';
 export type * from './report';
+export type * from './athlete-dashboard';
+

@@ -1,414 +1,283 @@
-// Ludis Landing — Hero Product Preview
-// A realistic Ludis application surface showing one coherent athlete state.
-// Hierarchy: Readiness (primary) → Performance+Baseline (secondary) →
-// Recovery/Fatigue (supporting) → Session (context) → Signals → Recommendation
-
+// Ludis Landing — Simplified Hero Product Preview
+// Represents a realistic premium sports-telemetry dashboard card.
 'use client';
 
 import { heroPreviewData } from './hero-preview-data';
 
-/* ─────────────────────────────────────────────
-   SVG Performance Trend Chart
-   10-day trend with baseline band
-   ───────────────────────────────────────────── */
-
-function PerformanceTrend() {
-  const { performance } = heroPreviewData;
+export function HeroProductPreview() {
+  const { readiness, recovery, fatigue, session, recommendation, performance } = heroPreviewData;
   const { trend, baseline, current } = performance;
 
-  // Chart geometry
-  const W = 380;
-  const H = 130;
-  const padL = 30;
-  const padR = 12;
-  const padT = 16;
-  const padB = 28;
+  // Chart geometry for internal SVG
+  const W = 240;
+  const H = 75;
+  const padL = 10;
+  const padR = 10;
+  const padT = 5;
+  const padB = 20;
   const chartW = W - padL - padR;
   const chartH = H - padT - padB;
 
-  // Data range — fixed to 70..90 for stable visual
-  const yMin = 70;
+  const yMin = 65;
   const yMax = 90;
   const yRange = yMax - yMin;
 
   const toX = (i: number) => padL + (i / (trend.length - 1)) * chartW;
   const toY = (v: number) => padT + (1 - (v - yMin) / yRange) * chartH;
 
-  // Build polyline points
-  const linePoints = trend.map((p, i) => `${toX(i)},${toY(p.value)}`).join(' ');
+  // Polyline points
+  const points = trend.map((p, i) => `${toX(i)},${toY(p.value)}`).join(' ');
 
-  // Baseline band Y coordinates
+  // Baseline band coordinates
   const bandTop = toY(baseline.max);
   const bandBottom = toY(baseline.min);
 
-  // Grid lines at 75, 80, 85
-  const gridValues = [75, 80, 85];
-
-  // Only show a few x-axis labels to avoid clutter
-  const xLabelIndices = [0, 3, 6, 9];
+  // X labels indices: Aug 4 (0), Aug 6 (2), Aug 8 (4), Aug 10 (6), Aug 13 (9)
+  const xLabels = [
+    { index: 0, label: 'Aug 4' },
+    { index: 2, label: 'Aug 6' },
+    { index: 4, label: 'Aug 8' },
+    { index: 6, label: 'Aug 10' },
+    { index: 9, label: 'Aug 13' },
+  ];
 
   return (
-    <div className="hero-preview-chart mt-4">
-      <div className="flex items-baseline justify-between mb-2">
-        <span className="text-xs font-semibold text-text-primary">
-          Performance trend
+    <div className="w-full max-w-lg mx-auto bg-[#050607] border border-white/10 rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.35)] overflow-hidden text-left font-sans select-none">
+      
+      {/* ── HEADER ── */}
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/6">
+        <span className="text-[10px] font-bold tracking-wider text-text-primary uppercase">
+          Performance Overview
         </span>
-        <div className="flex items-center gap-3 text-[10px] text-text-muted">
-          <span className="flex items-center gap-1">
-            <span
-              className="inline-block w-5 h-2 rounded-sm"
-              style={{ background: 'rgba(0,200,150,0.15)' }}
-            />
-            Baseline {baseline.min}–{baseline.max}
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-3 h-[2px] rounded-full bg-brand-primary" />
-            Current {current}
-          </span>
+        <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
+          <span>Today · Thu, Aug 13</span>
+          {/* Calendar Icon */}
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
         </div>
       </div>
 
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="w-full"
-        style={{ height: 'auto', maxHeight: '130px' }}
-        role="img"
-        aria-label={`Performance trend over 10 days. Current value ${current}, personal baseline ${baseline.min} to ${baseline.max}.`}
-      >
-        {/* Subtle horizontal grid */}
-        {gridValues.map((v) => (
-          <line
-            key={v}
-            x1={padL}
-            y1={toY(v)}
-            x2={W - padR}
-            y2={toY(v)}
-            stroke="rgba(255,255,255,0.05)"
-            strokeDasharray="2 4"
-          />
-        ))}
-
-        {/* Y-axis labels */}
-        {gridValues.map((v) => (
-          <text
-            key={`y-${v}`}
-            x={padL - 6}
-            y={toY(v) + 3}
-            textAnchor="end"
-            className="fill-text-muted"
-            style={{ fontSize: '9px' }}
-          >
-            {v}
-          </text>
-        ))}
-
-        {/* X-axis date labels */}
-        {xLabelIndices.map((i) => (
-          <text
-            key={`x-${i}`}
-            x={toX(i)}
-            y={H - 6}
-            textAnchor="middle"
-            className="fill-text-muted"
-            style={{ fontSize: '9px' }}
-          >
-            {trend[i].date.replace('Aug ', '8/')}
-          </text>
-        ))}
-
-        {/* Baseline band */}
-        <rect
-          x={padL}
-          y={bandTop}
-          width={chartW}
-          height={bandBottom - bandTop}
-          fill="rgba(0,200,150,0.08)"
-          rx="2"
-        />
-        {/* Baseline band edges */}
-        <line
-          x1={padL}
-          y1={bandTop}
-          x2={W - padR}
-          y2={bandTop}
-          stroke="rgba(0,200,150,0.15)"
-          strokeDasharray="3 3"
-        />
-        <line
-          x1={padL}
-          y1={bandBottom}
-          x2={W - padR}
-          y2={bandBottom}
-          stroke="rgba(0,200,150,0.15)"
-          strokeDasharray="3 3"
-        />
-
-        {/* Area fill under the line */}
-        <polygon
-          points={`${linePoints} ${toX(trend.length - 1)},${padT + chartH} ${toX(0)},${padT + chartH}`}
-          fill="url(#hero-trend-fill)"
-          className="hero-preview-chart-area"
-        />
-        <defs>
-          <linearGradient id="hero-trend-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(0,200,150,0.18)" />
-            <stop offset="100%" stopColor="rgba(0,200,150,0)" />
-          </linearGradient>
-        </defs>
-
-        {/* Trend line */}
-        <polyline
-          points={linePoints}
-          fill="none"
-          stroke="var(--brand-primary)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="hero-preview-chart-line"
-        />
-
-        {/* Data points — subtle dots */}
-        {trend.map((p, i) => (
-          <circle
-            key={i}
-            cx={toX(i)}
-            cy={toY(p.value)}
-            r={i === trend.length - 1 ? 3.5 : 1.5}
-            fill={i === trend.length - 1 ? 'var(--brand-primary)' : 'rgba(0,200,150,0.5)'}
-          />
-        ))}
-
-        {/* Current value pulse ring */}
-        <circle
-          cx={toX(trend.length - 1)}
-          cy={toY(trend[trend.length - 1].value)}
-          r="7"
-          fill="none"
-          stroke="var(--brand-primary)"
-          strokeWidth="1"
-          opacity="0.4"
-          className="hero-preview-chart-pulse"
-        />
-      </svg>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Main Hero Product Preview
-   ───────────────────────────────────────────── */
-
-export function HeroProductPreview() {
-  const {
-    date,
-    readiness,
-    recovery,
-    fatigue,
-    session,
-    signals,
-    recommendation,
-    performance,
-  } = heroPreviewData;
-
-  return (
-    <div className="relative w-full max-w-xl mx-auto lg:max-w-none">
-      {/* Soft ambient glow behind frame */}
-      <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-primary/15 via-transparent to-brand-accent/10 blur-2xl opacity-50 pointer-events-none" />
-
-      {/* ── APPLICATION FRAME ── */}
-      <div className="hero-preview-frame relative glass-app-frame rounded-2xl overflow-hidden shadow-2xl">
-
-        {/* ── App Header ── */}
-        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/[0.06]">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-bold text-text-primary tracking-tight">
-              Ludis
+      {/* ── TOP SECTION (READINESS & PERFORMANCE GRID) ── */}
+      <div className="grid grid-cols-1 md:grid-cols-5 border-b border-white/6">
+        
+        {/* Column 1: Readiness */}
+        <div className="md:col-span-2 p-5 border-b md:border-b-0 md:border-r border-white/6 flex flex-col justify-between">
+          <div>
+            <span className="text-[9px] font-bold text-text-muted tracking-wider uppercase">
+              Readiness
             </span>
-            <span className="hidden sm:inline text-xs text-text-muted">
-              Performance Overview
-            </span>
+            <div className="text-6xl font-bold text-brand-primary leading-none mt-2 font-sans tracking-tight">
+              {readiness.score}
+            </div>
           </div>
-          <div className="flex items-center gap-3 text-[11px] text-text-muted">
-            <span className="hidden sm:inline">{date.label}</span>
-            <span className="sm:hidden">Thu, Aug 13</span>
-            <span className="text-text-muted/60">·</span>
-            <span>{date.lastSynced}</span>
+          <div className="mt-4">
+            <span className="text-xs font-semibold text-brand-primary block">
+              {readiness.status}
+            </span>
+            <span className="text-[10px] text-text-muted mt-0.5 block">
+              Above your recent baseline
+            </span>
           </div>
         </div>
 
-        {/* ── Main Content ── */}
-        <div className="p-4 sm:p-5">
-
-          {/* Desktop: 2 columns (60/40). Mobile: stacked */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-5">
-
-            {/* ── LEFT / DOMINANT COLUMN ── */}
-            <div className="lg:col-span-3 space-y-1">
-
-              {/* Readiness — PRIMARY */}
-              <div className="glass-elevated rounded-xl p-4 sm:p-5 hero-preview-readiness">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-xs font-medium text-text-muted mb-1">
-                      Readiness
-                    </p>
-                    <div className="flex items-baseline gap-2.5">
-                      <span className="text-5xl font-bold text-text-primary tracking-tight leading-none">
-                        {readiness.score}
-                      </span>
-                      <span className="text-sm font-semibold text-status-positive">
-                        {readiness.status}
-                      </span>
-                    </div>
-                    <p className="text-xs text-text-secondary mt-1.5">
-                      {readiness.context}
-                    </p>
-                  </div>
-                  <span className="text-[11px] text-brand-primary font-medium bg-brand-primary-muted px-2 py-0.5 rounded-md whitespace-nowrap">
-                    {readiness.delta}
-                  </span>
-                </div>
-
-                {/* Baseline context */}
-                <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/[0.05] text-xs text-text-muted">
-                  <span>
-                    Personal baseline{' '}
-                    <span className="text-text-secondary font-medium">
-                      {performance.baseline.min}–{performance.baseline.max}
-                    </span>
-                  </span>
-                  <span>
-                    Current{' '}
-                    <span className="text-brand-primary font-medium">
-                      {performance.current}
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-              {/* Performance Trend — SECONDARY (largest visual area) */}
-              <div className="glass-content rounded-xl p-4 hero-preview-supporting">
-                <PerformanceTrend />
-              </div>
-            </div>
-
-            {/* ── RIGHT / SUPPORTING COLUMN ── */}
-            <div className="lg:col-span-2 space-y-3 hero-preview-supporting">
-
-              {/* Recovery — compact */}
-              <div className="glass-content rounded-xl p-3.5">
-                <p className="text-xs font-medium text-text-muted mb-2">
-                  Recovery
-                </p>
-                <div className="flex items-baseline gap-2 mb-2.5">
-                  <span className="text-2xl font-bold text-text-primary leading-none">
-                    {recovery.score}
-                  </span>
-                  <span className="text-xs font-semibold text-status-positive">
-                    {recovery.status}
-                  </span>
-                </div>
-                <div className="space-y-1.5 text-xs">
-                  <div className="flex justify-between text-text-secondary">
-                    <span>Sleep</span>
-                    <span className="text-text-primary font-medium">{recovery.sleep}</span>
-                  </div>
-                  <div className="flex justify-between text-text-secondary">
-                    <span>Training load</span>
-                    <span className="text-text-primary font-medium">{recovery.trainingLoad}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Fatigue — compact */}
-              <div className="glass-content rounded-xl p-3.5">
-                <p className="text-xs font-medium text-text-muted mb-2">
-                  Fatigue
-                </p>
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-lg font-bold text-status-warning leading-none">
-                    {fatigue.level}
-                  </span>
-                </div>
-                <p className="text-[11px] text-text-muted">
-                  {fatigue.trend}
-                </p>
-              </div>
-
-              {/* Today's Session — compact */}
-              <div className="glass-content rounded-xl p-3.5">
-                <p className="text-xs font-medium text-text-muted mb-2">
-                  Today&apos;s session
-                </p>
-                <p className="text-sm font-semibold text-text-primary leading-snug">
-                  {session.name}
-                </p>
-                <div className="flex items-center gap-2 mt-1 text-xs text-text-secondary">
-                  <span>{session.time}</span>
-                  <span className="text-text-muted/40">·</span>
-                  <span>{session.intensity} intensity</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── BOTTOM SECTION (full width) ── */}
-          <div className="mt-4 space-y-3 hero-preview-action">
-
-            {/* Contributing Signals */}
-            <div className="glass-content rounded-xl p-3.5">
-              <p className="text-xs font-medium text-text-muted mb-2.5">
-                Contributing signals
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-                {signals.map((signal) => (
-                  <div key={signal.label} className="flex items-baseline justify-between sm:flex-col sm:items-start gap-1">
-                    <span className="text-xs text-text-secondary">
-                      {signal.label}
-                    </span>
-                    <span className="text-xs text-text-primary font-medium">
-                      {signal.status}
-                      {signal.detail && (
-                        <span className="text-text-muted font-normal"> · {signal.detail}</span>
-                      )}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Recommendation — accent glass */}
-            <div className="glass-accent rounded-xl p-4 border-l-2 border-l-brand-primary/40">
-              <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1.5">
-                  <p className="text-xs font-medium text-brand-primary">
-                    Recommended today
-                  </p>
-                  <p className="text-sm font-semibold text-text-primary leading-snug">
-                    {recommendation.primary}
-                    <br />
-                    {recommendation.secondary}
-                  </p>
-                  <p className="text-xs text-text-secondary leading-relaxed mt-1">
-                    {recommendation.explanation}
-                  </p>
-                </div>
-                <span className="text-[10px] text-text-muted whitespace-nowrap pt-0.5">
-                  Confidence{' '}
-                  <span className="text-status-positive font-medium">
-                    {recommendation.confidence}
-                  </span>
+        {/* Column 2: Performance & Chart */}
+        <div className="md:col-span-3 p-5 flex flex-col justify-between">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <span className="text-[9px] font-bold text-text-muted tracking-wider uppercase">
+                Performance
+              </span>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-2xl font-bold text-text-primary tracking-tight">
+                  {current}
+                </span>
+                <span className="text-[10px] text-text-muted">
+                  Personal baseline {baseline.min}–{baseline.max}
                 </span>
               </div>
             </div>
           </div>
+
+          {/* Restrained SVG Chart */}
+          <div className="mt-4">
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxHeight: '75px' }}>
+              {/* Baseline Band */}
+              <rect
+                x={padL}
+                y={bandTop}
+                width={chartW}
+                height={bandBottom - bandTop}
+                fill="rgba(0, 191, 166, 0.04)"
+              />
+              <line
+                x1={padL}
+                y1={bandTop}
+                x2={W - padR}
+                y2={bandTop}
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeDasharray="2 2"
+                strokeWidth="1"
+              />
+              <line
+                x1={padL}
+                y1={bandBottom}
+                x2={W - padR}
+                y2={bandBottom}
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeDasharray="2 2"
+                strokeWidth="1"
+              />
+
+              {/* Grid line under baseline */}
+              <line
+                x1={padL}
+                y1={toY(70)}
+                x2={W - padR}
+                y2={toY(70)}
+                stroke="rgba(255, 255, 255, 0.04)"
+                strokeWidth="1"
+              />
+
+              {/* Trend Area Gradient */}
+              <polygon
+                points={`${points} ${toX(trend.length - 1)},${toY(yMin)} ${toX(0)},${toY(yMin)}`}
+                fill="url(#trend-gradient)"
+              />
+              <defs>
+                <linearGradient id="trend-gradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgba(0, 191, 166, 0.1)" />
+                  <stop offset="100%" stopColor="rgba(0, 191, 166, 0)" />
+                </linearGradient>
+              </defs>
+
+              {/* Trend Polyline */}
+              <polyline
+                points={points}
+                fill="none"
+                stroke="var(--brand-primary)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* Small dots on points */}
+              {trend.map((pt, idx) => (
+                <circle
+                  key={idx}
+                  cx={toX(idx)}
+                  cy={toY(pt.value)}
+                  r={idx === trend.length - 1 ? 3 : 1.5}
+                  fill={idx === trend.length - 1 ? 'var(--brand-primary)' : 'rgba(0, 191, 166, 0.4)'}
+                />
+              ))}
+
+              {/* Outer halo ring around current peak point */}
+              <circle
+                cx={toX(trend.length - 1)}
+                cy={toY(trend[trend.length - 1].value)}
+                r="6"
+                fill="none"
+                stroke="var(--brand-primary)"
+                strokeWidth="0.75"
+                opacity="0.5"
+              />
+
+              {/* X Axis Labels */}
+              {xLabels.map((lbl) => (
+                <text
+                  key={lbl.index}
+                  x={toX(lbl.index)}
+                  y={H - 4}
+                  textAnchor="middle"
+                  className="fill-text-muted text-[8px] font-sans"
+                >
+                  {lbl.label}
+                </text>
+              ))}
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* ── MIDDLE SUPPORTING METRICS ── */}
+      <div className="grid grid-cols-3 border-b border-white/6 text-left">
+        
+        {/* Recovery */}
+        <div className="p-4 border-r border-white/6 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-text-muted">
+            <span className="text-[9px] font-bold tracking-wider uppercase">Recovery</span>
+            {/* Heart Icon */}
+            <svg className="w-3 h-3 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <div className="mt-2.5">
+            <div className="text-xl font-bold text-text-primary tracking-tight">
+              {recovery.score}
+            </div>
+            <span className="text-[10px] font-semibold text-brand-primary mt-0.5 block">
+              Good
+            </span>
+          </div>
         </div>
 
-        {/* Tiny illustrative data disclaimer — outside core hierarchy */}
-        <div className="px-5 pb-2.5 text-right">
-          <span className="text-[9px] text-text-muted/40 tracking-wide">
-            Illustrative data
-          </span>
+        {/* Fatigue */}
+        <div className="p-4 border-r border-white/6 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-text-muted">
+            <span className="text-[9px] font-bold tracking-wider uppercase">Fatigue</span>
+            {/* Wave / Sine Icon */}
+            <svg className="w-3.5 h-3.5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div className="mt-2.5">
+            <div className="text-xl font-bold text-text-primary tracking-tight">
+              {fatigue.level}
+            </div>
+            <span className="text-[10px] text-text-muted mt-0.5 block">
+              {fatigue.trend}
+            </span>
+          </div>
+        </div>
+
+        {/* Today's Session */}
+        <div className="p-4 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-text-muted">
+            <span className="text-[9px] font-bold tracking-wider uppercase">Today&apos;s Session</span>
+            {/* Calendar Event Icon */}
+            <svg className="w-3 h-3 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div className="mt-2.5">
+            <div className="text-xs font-semibold text-text-primary truncate leading-tight">
+              {session.name}
+            </div>
+            <span className="text-[10px] text-text-muted mt-1 block">
+              {session.time}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── BOTTOM RECOMMENDATION BANNER ── */}
+      <div className="p-4 bg-[#08090B] flex items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="text-[9px] font-bold text-brand-primary tracking-wider uppercase">
+            Recommended Today
+          </div>
+          <div className="text-xs font-semibold text-text-primary leading-snug">
+            {recommendation.primary}
+            <br />
+            {recommendation.secondary}
+          </div>
+        </div>
+        {/* Right arrow link mark */}
+        <div className="text-text-muted hover:text-brand-primary transition-colors duration-150 cursor-pointer p-1">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5l7 7-7 7" />
+          </svg>
         </div>
       </div>
     </div>

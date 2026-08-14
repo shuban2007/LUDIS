@@ -17,3 +17,5 @@ export {
   mockTrainingSessions,
   mockNotifications,
 } from './events';
+export { mockAthleteDashboardData } from './athlete-dashboard';
+

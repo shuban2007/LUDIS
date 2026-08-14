@@ -1,13 +1,10 @@
-// Ludis — Isolated Demo Authentication Service
-// Dedicated layer for quick demo access during development/previews.
-// Can be safely removed or disabled without touching production auth.
+// TEMPORARY DEMO AUTH
+// Remove this module and DEMO_AUTH_ENABLED when demo mode is retired.
 
 import type { UserRole } from '@/lib/types';
 
-/**
- * Internal demo credentials configuration.
- * Kept isolated in this file so zero passwords/credentials are exposed in UI or DOM.
- */
+export const DEMO_AUTH_ENABLED = true;
+
 const DEMO_ACCOUNTS: Record<UserRole, { email: string; secret: string }> = {
   athlete: { email: 'athlete@ludis.app', secret: 'demo-athlete-session' },
   coach: { email: 'coach@ludis.app', secret: 'demo-coach-session' },

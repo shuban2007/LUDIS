@@ -28,11 +28,12 @@ export function MobileNav({ items }: MobileNavProps) {
             <li key={item.href} className="flex-1">
               <Link
                 href={item.href}
-                className={`flex flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-bold transition-colors ${
+                className={`nav-item flex flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-bold transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-[rgba(0,191,166,0.45)] focus-visible:outline-offset-2 rounded-md ${
                   isActive ? 'text-brand-primary' : 'text-text-muted hover:text-text-secondary'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
+
                 <span className="[&>svg]:h-5 [&>svg]:w-5">{item.icon}</span>
                 <span>{item.label}</span>
               </Link>

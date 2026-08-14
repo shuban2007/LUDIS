@@ -20,7 +20,7 @@ export function TrendChart({
   baselineValue,
   height = 120,
   color = 'var(--chart-primary)',
-  baselineColor = 'var(--chart-baseline)',
+  baselineColor = 'var(--chart-band-border)',
   label,
   unit = '',
 }: TrendChartProps) {

@@ -4,7 +4,9 @@
 
 import type {
   AthleteProfile,
+  AthleteDashboardData,
   PPISummary,
+
   ReadinessSummary,
   PersonalBaseline,
   PerformanceInsight,
@@ -36,6 +38,7 @@ import {
   mockTrainingSessions,
   mockNotifications,
   mockTeamSummaries,
+  mockAthleteDashboardData,
 } from '@/lib/mock';
 
 // ──────────────────────────────────────
@@ -53,6 +56,12 @@ export function getCurrentAthlete(): AthleteProfile {
 export function getAllAthletes(): AthleteProfile[] {
   return mockAthletes;
 }
+
+export function getAthleteDashboardData(athleteId?: string): AthleteDashboardData {
+  void athleteId;
+  return mockAthleteDashboardData;
+}
+
 
 // ──────────────────────────────────────
 // Performance service

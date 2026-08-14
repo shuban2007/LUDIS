@@ -35,7 +35,8 @@ export function CoachShell({ children }: { children: ReactNode }) {
           />
           <div className="lg:hidden fixed left-0 top-0 bottom-0 w-60 z-50 bg-surface-base border-r border-border-subtle shadow-2xl flex flex-col">
             <div className="flex items-center justify-between px-5 h-14 border-b border-border-subtle shrink-0">
-              <LudisLogo linkToHome variant="compact" size="sm" />
+              <LudisLogo linkToHome variant="navbar" size="sm" themeStyle="inverted" noBadge={true} showSubtitle={false} />
+
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-1.5 rounded-md text-text-secondary hover:bg-surface-hover"
@@ -55,13 +56,14 @@ export function CoachShell({ children }: { children: ReactNode }) {
                       <Link
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                        className={`nav-item flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-[rgba(0,191,166,0.45)] focus-visible:outline-offset-2 ${
                           isActive
                             ? 'bg-brand-primary-muted text-brand-primary border border-brand-primary/30 font-semibold'
-                            : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'
+                            : 'border border-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary'
                         }`}
                         aria-current={isActive ? 'page' : undefined}
                       >
+
                         <span className="shrink-0 [&>svg]:h-[18px] [&>svg]:w-[18px]">{item.icon}</span>
                         {item.label}
                       </Link>

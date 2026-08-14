@@ -1,56 +1,52 @@
 // Ludis Landing — Hero Section with entrance animations
-// Client component boundary for motion. Hero has the strongest entrance.
-
 'use client';
 
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { HeroProductPreview } from '@/components/landing/hero-product-preview';
 import { HeroReveal } from '@/components/landing/scroll-reveal';
+import { useAuthModal } from '@/lib/auth';
 
 export function HeroSection() {
+  const { openSignUp } = useAuthModal();
   return (
-    <section className="pt-12 pb-24 px-4 sm:px-6 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <section className="pt-20 pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
         {/* Hero Typography Left Column */}
-        <div className="lg:col-span-6 text-center lg:text-left space-y-6">
+        <div className="lg:col-span-6 space-y-8 text-left">
           <HeroReveal delay={0.05} duration={0.5} offset={16}>
-            <div className="inline-flex items-center gap-2 rounded-full glass-subtle border-border-luminous px-4 py-1.5 text-xs font-mono font-semibold text-brand-primary shadow-lg">
-              <span className="h-2 w-2 rounded-full bg-brand-primary animate-ping" />
-              SPORTS-PERFORMANCE INTELLIGENCE ENGINE
+            <div className="text-xs tracking-[0.15em] uppercase font-bold text-brand-primary">
+              AI-POWERED PERFORMANCE INTELLIGENCE
             </div>
           </HeroReveal>
 
           <HeroReveal delay={0.15} duration={0.6} offset={24}>
-            <h1 className="text-4xl sm:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-[0.95] text-text-primary">
-              KNOW YOUR BODY.
-              <br />
-              <span className="bg-gradient-to-r from-brand-primary via-brand-primary-hover to-brand-cyan bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(0,200,150,0.35)]">
-                TRAIN SMARTER.
-              </span>
+            <h1 className="text-5xl sm:text-7xl xl:text-8xl font-serif tracking-tight leading-[1.05]">
+              <span className="text-text-primary font-normal italic block">KNOW YOUR BODY.</span>
+              <span className="text-brand-primary font-bold block mt-2">TRAIN SMARTER.</span>
             </h1>
           </HeroReveal>
 
           <HeroReveal delay={0.3} duration={0.5} offset={18}>
-            <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal">
-              Ludis transforms your health and training telemetry into individualized performance, recovery, fatigue, and readiness insights built around your personal baseline.
+            <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-lg font-normal">
+              Ludis turns training and health data into personalized performance, recovery, fatigue and readiness insights built around your own baseline.
             </p>
           </HeroReveal>
 
           <HeroReveal delay={0.45} duration={0.5} offset={16}>
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-              <Link href="/signup" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto bg-brand-primary hover:bg-brand-primary-hover text-text-inverse font-extrabold text-sm uppercase tracking-wider rounded-xl px-8 py-3.5 shadow-[0_0_25px_rgba(0,200,150,0.35)]">
-                  Start Free
-                </Button>
-              </Link>
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+              <button
+                onClick={() => openSignUp()}
+                className="w-full sm:w-auto bg-brand-primary hover:bg-brand-primary-hover text-black font-semibold text-sm rounded-md px-6 py-3 transition-colors duration-150 select-none cursor-pointer text-center"
+              >
+                GET STARTED — FREE
+              </button>
               <a href="#baseline" className="w-full sm:w-auto">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto glass-subtle border-border-default hover:border-brand-primary/40 text-text-primary font-bold text-sm uppercase tracking-wider rounded-xl px-8 py-3.5">
-                  See How It Works
-                </Button>
+                <button className="w-full sm:w-auto border border-border-default hover:border-border-strong text-text-primary font-semibold text-sm rounded-md px-6 py-3 transition-colors duration-150 select-none cursor-pointer">
+                  SEE HOW IT WORKS
+                </button>
               </a>
             </div>
           </HeroReveal>
+
         </div>
 
         {/* Hero Product Visualization Right Column */}
