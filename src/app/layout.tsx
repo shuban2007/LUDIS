@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider, AuthModalProvider } from "@/lib/auth";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { ThemeProvider } from "@/lib/theme-context";
+import { DemoProvider } from "@/lib/demo/demo-context";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -36,24 +37,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable} h-full`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable} h-full`} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('ludis-theme');
-                  if (!theme) {
-                    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                  }
+                  var saved = localStorage.getItem('ludis-theme');
+                  var theme = (saved === 'light' || saved === 'dark') ? saved : 'dark';
+                  document.documentElement.classList.remove('light', 'dark');
+                  document.documentElement.classList.add(theme);
                   document.documentElement.setAttribute('data-theme', theme);
-                  if (theme === 'light') {
-                    document.documentElement.classList.add('light');
-                  } else {
-                    document.documentElement.classList.remove('light');
-                  }
-                } catch (e) {}
+                } catch (e) {
+                  document.documentElement.classList.add('dark');
+                }
               })();
             `,
           }}
@@ -62,10 +60,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col font-sans antialiased">
         <ThemeProvider>
           <AuthProvider>
-            <AuthModalProvider>
-              {children}
-              <AuthModal />
-            </AuthModalProvider>
+            <DemoProvider>
+              <AuthModalProvider>
+                {children}
+                <AuthModal />
+              </AuthModalProvider>
+            </DemoProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

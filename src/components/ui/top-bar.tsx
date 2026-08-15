@@ -4,13 +4,13 @@
 
 'use client';
 
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { LudisLogo } from '@/components/ui/ludis-logo';
-import { NotificationsIcon, ChevronDownIcon } from '@/components/ui/icons';
 import { useTheme } from '@/lib/theme/theme-provider';
+import { useDemo } from '@/lib/demo/demo-context';
 
 interface TopBarProps {
   notificationCount?: number;
@@ -20,24 +20,34 @@ interface TopBarProps {
 }
 
 export function AppTopBar({
-  notificationCount = 0,
-  notificationHref = '/athlete/notifications',
-  profileHref = '/athlete/profile',
   onMobileMenuToggle,
 }: TopBarProps) {
   const { user } = useAuth();
+  const { getCurrentAthlete, getCoachProfile } = useDemo();
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const currentAthlete = getCurrentAthlete();
+  const coachProfile = getCoachProfile();
 
   // Resolve dynamic display details
   const isAthleteRoute = pathname.startsWith('/athlete');
-  const displayName = isAthleteRoute
-    ? user?.role === 'athlete'
-      ? user.displayName
-      : 'Alex Morgan'
-    : user?.displayName ?? 'Coach Martinez';
+  const isAthlete = user?.role === 'athlete' || isAthleteRoute;
 
-  const roleLabel = isAthleteRoute ? 'Athlete' : user?.role === 'athlete' ? 'Athlete' : 'Coach';
+  const displayName = isAthlete
+    ? `${currentAthlete.profile.firstName} ${currentAthlete.profile.lastName}`
+    : coachProfile.fullName || 'Coach Martinez';
+
+  const roleLabel = isAthlete ? 'Athlete' : (coachProfile.role || 'Coach');
+  const avatarUrl = isAthlete ? currentAthlete.profile.avatar : coachProfile.avatar;
   const firstInitial = displayName.charAt(0).toUpperCase();
 
   return (
@@ -57,7 +67,7 @@ export function AppTopBar({
         )}
 
         {/* Logo */}
-        <div className="flex items-center">
+        <div className="flex items-center lg:hidden">
           <LudisLogo linkToHome variant="navbar" size="sm" themeStyle="inverted" noBadge={true} showSubtitle={false} />
         </div>
       </div>
@@ -67,46 +77,22 @@ export function AppTopBar({
         <button
           onClick={toggleTheme}
           className="w-[38px] h-[38px] rounded-full flex items-center justify-center bg-glass-bg border border-glass-border text-foreground-secondary hover:text-foreground hover:bg-surface-2 transition-all duration-300 shadow-card cursor-pointer focus:outline-none"
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          aria-label={mounted ? `Switch to ${theme === 'light' ? 'dark' : 'light'} theme` : 'Toggle theme'}
         >
-          {theme === 'light' ? (
-            <svg className="w-[18px] h-[18px] transition-transform duration-300 rotate-0 hover:rotate-12" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-          ) : (
-            <svg className="w-[18px] h-[18px] transition-transform duration-300 rotate-0 hover:rotate-45" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-          )}
+          <svg className="theme-icon-light w-[18px] h-[18px] transition-transform duration-300 rotate-0 hover:rotate-12" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <svg className="theme-icon-dark w-[18px] h-[18px] transition-transform duration-300 rotate-0 hover:rotate-45" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
         </button>
 
-        {/* Notifications */}
-        <Link
-          href={notificationHref}
-          className="relative w-[38px] h-[38px] rounded-full flex items-center justify-center bg-glass-bg border border-glass-border text-foreground-secondary hover:text-foreground hover:bg-surface-2 transition-all duration-300 shadow-card cursor-pointer focus:outline-none"
-          aria-label={`Notifications${notificationCount > 0 ? ` (${notificationCount} unread)` : ''}`}
-        >
-          <NotificationsIcon className="h-4.5 w-4.5" />
-          {notificationCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-brand text-[9px] font-bold text-brand-foreground flex items-center justify-center">
-              {notificationCount > 9 ? '9+' : notificationCount}
-            </span>
-          )}
-        </Link>
-
-        {/* Vertical divider */}
-        <div className="h-5 border-r border-border-subtle" />
-
-        {/* Profile */}
-        <Link
-          href={profileHref}
-          className="flex items-center gap-3 py-1.5 px-2.5 rounded-lg hover:bg-surface-2 transition-colors cursor-pointer group"
-          aria-label="Profile"
-        >
+        {/* Profile (visually static) */}
+        <div className="flex items-center gap-3 py-1.5 px-2.5">
           <div className="relative h-8 w-8 rounded-full overflow-hidden border border-border-default bg-surface-2 flex items-center justify-center shrink-0">
-            {user?.avatarUrl ? (
+            {avatarUrl ? (
               <Image
-                src={user.avatarUrl}
+                src={avatarUrl}
                 alt={displayName}
                 fill
                 className="object-cover"
@@ -117,14 +103,12 @@ export function AppTopBar({
           </div>
 
           <div className="hidden sm:flex flex-col text-left leading-none">
-            <span className="text-xs font-medium text-foreground group-hover:text-brand transition-colors">
+            <span className="text-xs font-medium text-foreground">
               {displayName}
             </span>
             <span className="text-[10px] text-foreground-muted mt-1">{roleLabel}</span>
           </div>
-
-          <ChevronDownIcon className="w-3.5 h-3.5 text-foreground-muted group-hover:text-foreground transition-colors hidden sm:block" />
-        </Link>
+        </div>
       </div>
     </header>
   );

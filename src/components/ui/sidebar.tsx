@@ -10,6 +10,7 @@ import type { ReactNode } from 'react';
 import { LudisLogo } from '@/components/ui/ludis-logo';
 import { SettingsIcon, HelpIcon } from '@/components/ui/icons';
 import { isNavItemActive, type NavItem } from '@/lib/navigation';
+import { useDemo } from '@/lib/demo/demo-context';
 
 export type { NavItem };
 
@@ -23,10 +24,13 @@ export function AppSidebar({ items, footer }: SidebarProps) {
 
   // Determine paths based on role context
   const isCoach = pathname.startsWith('/coach');
-  const settingsHref = isCoach ? '/coach/profile' : '/athlete/profile';
-  const helpHref = isCoach ? '/coach/profile' : '/athlete/insights';
+  const settingsHref = isCoach ? '/coach/settings' : '/athlete/settings';
+  const helpHref = isCoach ? '/coach/settings' : '/athlete/insights';
 
-  const isSettingsActive = isNavItemActive(pathname, { href: settingsHref, match: 'section' });
+  const isSettingsActive = isNavItemActive(pathname, { href: settingsHref, match: 'exact' });
+
+  const { notifications } = useDemo();
+  const unreadNotificationsCount = notifications.filter((n) => !n.read).length;
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-60 lg:shrink-0 bg-glass-bg border-r border-border-subtle h-screen sticky top-0 overflow-hidden select-none">
@@ -58,7 +62,15 @@ export function AppSidebar({ items, footer }: SidebarProps) {
                   <span className={`shrink-0 [&>svg]:h-5 [&>svg]:w-5 ${isActive ? 'text-brand' : 'text-foreground-secondary'}`}>
                     {item.icon}
                   </span>
-                  {item.label}
+                  
+                  <span className="flex-grow flex items-center justify-between">
+                    <span>{item.label}</span>
+                    {item.label === 'Notifications' && unreadNotificationsCount > 0 && (
+                      <span className="bg-brand text-brand-foreground text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
+                        {unreadNotificationsCount}
+                      </span>
+                    )}
+                  </span>
                 </Link>
               </li>
             );

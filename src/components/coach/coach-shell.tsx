@@ -1,5 +1,6 @@
 // Ludis — Coach Shell Layout
 // Desktop/tablet-first layout with team navigation.
+// Integrates premium, restrained Framer Motion entrance fades and slide transitions.
 
 'use client';
 
@@ -7,6 +8,7 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, useReducedMotion } from 'motion/react';
 import { Sidebar } from '@/components/ui/sidebar';
 import { TopBar } from '@/components/ui/top-bar';
 import { LudisLogo } from '@/components/ui/ludis-logo';
@@ -20,10 +22,24 @@ export function CoachShell({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const userId = user?.id ?? 'usr-006';
   const notificationCount = getUnreadCount(userId);
+  const prefersReduced = useReducedMotion();
 
   return (
-    <div className="flex min-h-screen bg-surface-ground">
-      <Sidebar items={coachNavItems} />
+    <motion.div 
+      initial={prefersReduced ? {} : { opacity: 0 }}
+      animate={prefersReduced ? {} : { opacity: 1 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="flex min-h-screen bg-surface-ground"
+    >
+      {/* Sidebar - fades in slightly earlier */}
+      <motion.div
+        initial={prefersReduced ? {} : { opacity: 0, x: -8 }}
+        animate={prefersReduced ? {} : { opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, delay: 0.05, ease: 'easeOut' }}
+        className="hidden lg:flex"
+      >
+        <Sidebar items={coachNavItems} />
+      </motion.div>
 
       {/* Mobile sidebar overlay drawer */}
       {mobileMenuOpen && (
@@ -63,7 +79,6 @@ export function CoachShell({ children }: { children: ReactNode }) {
                         }`}
                         aria-current={isActive ? 'page' : undefined}
                       >
-
                         <span className="shrink-0 [&>svg]:h-[18px] [&>svg]:w-[18px]">{item.icon}</span>
                         {item.label}
                       </Link>
@@ -77,17 +92,30 @@ export function CoachShell({ children }: { children: ReactNode }) {
       )}
 
       <div className="flex-1 flex flex-col min-w-0">
-        <TopBar
-          notificationCount={notificationCount}
-          notificationHref="/coach/notifications"
-          profileHref="/coach/profile"
-          onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
-        />
+        {/* Topbar fade */}
+        <motion.div
+          initial={prefersReduced ? {} : { opacity: 0, y: -6 }}
+          animate={prefersReduced ? {} : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
+        >
+          <TopBar
+            notificationCount={notificationCount}
+            notificationHref="/coach/notifications"
+            profileHref="/coach/profile"
+            onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+          />
+        </motion.div>
 
-        <main className="flex-1 p-4 lg:p-6">
+        {/* Main Content entrance */}
+        <motion.main 
+          initial={prefersReduced ? {} : { opacity: 0, y: 12 }}
+          animate={prefersReduced ? {} : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.15, ease: 'easeOut' }}
+          className="flex-1 p-4 lg:p-6"
+        >
           {children}
-        </main>
+        </motion.main>
       </div>
-    </div>
+    </motion.div>
   );
 }

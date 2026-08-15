@@ -1,6 +1,10 @@
 // Ludis — Premium Dark Editorial Landing Page
 // Scroll animation applied via client-boundary motion wrappers.
+// Employs private React refs and callback-based navigation hooks for Athlete/Coach cards visual centering.
 
+'use client';
+
+import { useRef } from 'react';
 import { LandingNav } from '@/components/landing/landing-nav';
 import { HeroSection } from '@/components/landing/hero-section';
 import { BaselineVisual } from '@/components/landing/baseline-visual';
@@ -11,13 +15,32 @@ import {
   FinalCTA,
   LandingFooter,
 } from '@/components/landing/sections';
+import { scrollPanelToViewportCenter } from '@/lib/navigation/scroll-to-section';
 
 export default function LandingPage() {
+  // 1. Instantiating refs for visual panels at page container boundary
+  const athletePanelRef = useRef<HTMLDivElement | null>(null);
+  const coachPanelRef = useRef<HTMLDivElement | null>(null);
+
+  // 2. Center-visual layout alignment navigation handlers
+  const handleNavigateAthletes = () => {
+    if (!athletePanelRef.current) return;
+    scrollPanelToViewportCenter(athletePanelRef.current);
+  };
+
+  const handleNavigateCoaches = () => {
+    if (!coachPanelRef.current) return;
+    scrollPanelToViewportCenter(coachPanelRef.current);
+  };
+
   return (
     <div className="min-h-screen bg-surface-ground text-text-primary selection:bg-brand-primary/30 selection:text-brand-primary relative overflow-hidden">
 
-      {/* Navigation Bar */}
-      <LandingNav />
+      {/* Navigation Bar - Receives callback handlers */}
+      <LandingNav 
+        onNavigateAthletes={handleNavigateAthletes} 
+        onNavigateCoaches={handleNavigateCoaches} 
+      />
 
       {/* ── HERO SECTION ── */}
       <HeroSection />
@@ -28,8 +51,11 @@ export default function LandingPage() {
       {/* ── FOUR MVP CAPABILITIES PILLARS ── */}
       <MvpPillars />
 
-      {/* ── ATHLETE & COACH AUDIENCE SECTION ── */}
-      <AudienceSection />
+      {/* ── ATHLETE & COACH AUDIENCE SECTION - Receives panel refs directly ── */}
+      <AudienceSection 
+        athletePanelRef={athletePanelRef} 
+        coachPanelRef={coachPanelRef} 
+      />
 
       {/* ── RESPONSIBLE AI & ETHICAL BOUNDARIES ── */}
       <ResponsibleAI />
@@ -37,8 +63,11 @@ export default function LandingPage() {
       {/* ── FINAL CTA ── */}
       <FinalCTA />
 
-      {/* ── FOOTER ── */}
-      <LandingFooter />
+      {/* ── FOOTER - Receives callback handlers ── */}
+      <LandingFooter 
+        onNavigateAthletes={handleNavigateAthletes} 
+        onNavigateCoaches={handleNavigateCoaches} 
+      />
     </div>
   );
 }

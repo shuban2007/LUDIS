@@ -24,7 +24,6 @@ export function runNavigationTests(): { passed: boolean; log: string[] } {
     { route: '/athlete/progress', expectedActive: 'Progress' },
     { route: '/athlete/notifications', expectedActive: 'Notifications' },
     { route: '/athlete/profile', expectedActive: 'Profile' },
-    { route: '/athlete/profile/settings', expectedActive: 'Profile' },
   ];
 
   const coachTestMatrix = [

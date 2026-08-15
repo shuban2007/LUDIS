@@ -12,4 +12,5 @@ export type * from './training';
 export type * from './notification';
 export type * from './report';
 export type * from './athlete-dashboard';
+export type * from './profile';
 

@@ -1,44 +1,30 @@
-// Ludis — Progress & Reports Page
+'use client';
 
-import { PageHeader } from '@/components/ui/page-header';
-import { Card } from '@/components/ui/card';
-import { TrendChart } from '@/components/shared/trend-chart';
-import { ConfidenceIndicator } from '@/components/shared/confidence-indicator';
-import { getCurrentAthlete, getPPI, getRecoveryStatus, getFatigueRisk } from '@/lib/services/data-service';
+import { useDemo } from '@/lib/demo/demo-context';
+import { DashboardSectionPage } from '@/components/dashboard/dashboard-section-page';
+import { Card, CardTitle, CardDescription } from '@/components/ui/card';
 
 export default function ProgressPage() {
-  const athlete = getCurrentAthlete();
-  const ppi = getPPI(athlete.id);
-  const recovery = getRecoveryStatus(athlete.id);
-  const fatigue = getFatigueRisk(athlete.id);
+  const { getCurrentAthlete } = useDemo();
+  const currentAthlete = getCurrentAthlete();
 
   return (
-    <div className="max-w-4xl">
-      <PageHeader
-        title="Progress & Reports"
-        subtitle="Track your trends over time"
-        section="Progress"
-      />
-
-      <div className="space-y-6">
-        <Card>
-          <h3 className="text-sm font-semibold text-text-primary mb-3">Performance Trend</h3>
-          <TrendChart trend={ppi.trend} baselineValue={ppi.score - ppi.deviation} label="PPI" unit="pts" />
-          <div className="mt-3">
-            <ConfidenceIndicator confidence={ppi.confidence} compact />
-          </div>
-        </Card>
-
-        <Card>
-          <h3 className="text-sm font-semibold text-text-primary mb-3">Recovery Trend</h3>
-          <TrendChart trend={recovery.trend} label="Recovery" unit="pts" color="var(--status-positive)" />
-        </Card>
-
-        <Card>
-          <h3 className="text-sm font-semibold text-text-primary mb-3">Fatigue Trend</h3>
-          <TrendChart trend={fatigue.trend} label="Fatigue" color="var(--status-warning)" />
-        </Card>
-      </div>
-    </div>
+    <DashboardSectionPage
+      title="Training Progress"
+      subtitle="Track your progress indicators, historical trends, and workout achievements."
+      sectionName="Progress"
+      metricLabel="Current Progress"
+      metricValue={`${currentAthlete.readiness.score}%`}
+      metricStatus="Good"
+      metricDescription="Consistent target completion verified."
+      backHref="/athlete"
+    >
+      <Card className="p-5">
+        <CardTitle>Weekly Goal Targets</CardTitle>
+        <CardDescription>
+          Completed {currentAthlete.session.title} session successfully today ({currentAthlete.session.duration}). Autonomic recovery telemetry matches target readiness scores of {currentAthlete.readiness.score}%.
+        </CardDescription>
+      </Card>
+    </DashboardSectionPage>
   );
 }

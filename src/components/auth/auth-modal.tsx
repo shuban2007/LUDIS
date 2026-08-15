@@ -13,7 +13,6 @@ import { useAuth, useAuthModal, DEMO_AUTH_ENABLED } from '@/lib/auth';
 import { DemoLogin } from './demo-login';
 import { Button } from '@/components/ui/button';
 import type { UserRole } from '@/lib/types';
-import { useTheme } from '@/lib/theme/theme-provider';
 
 // ─────────────────────────────────────────────
 // Reusable SVG Icons (No third-party dependency)
@@ -126,7 +125,6 @@ function AppleIcon(props: React.SVGProps<SVGSVGElement>) {
 function AuthModalCard() {
   const { view, closeModal, switchView } = useAuthModal();
   const { login, signup, isLoading } = useAuth();
-  const { theme } = useTheme();
   const router = useRouter();
 
   const isSignIn = view === 'signin';
@@ -334,10 +332,6 @@ function AuthModalCard() {
                 height={56}
                 priority
                 className="object-contain h-11 w-11 sm:h-[56px] sm:w-[56px] logo-img-inverted"
-                style={{
-                  mixBlendMode: theme === 'light' ? 'multiply' : 'screen',
-                  filter: theme === 'light' ? 'none' : 'invert(1)',
-                }}
               />
               <div className="h-6 sm:h-8 border-r border-border-subtle" />
               <span className="text-xl sm:text-2xl font-semibold tracking-[0.1em] text-foreground uppercase font-sans">

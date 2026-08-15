@@ -1,0 +1,26 @@
+# Ludis Dashboard System Implementation Task List
+
+- `[x]` Create centralized demo data and context providers
+  - `[x]` Define structured athletes, notifications, sessions, and competitions data in `src/data/demo/demo-data.ts`
+  - `[x]` Create `src/lib/demo/demo-context.tsx` with immutable state, data selectors, and update controllers
+  - `[x]` Integrate `DemoProvider` wrapper in `layout.tsx`
+- `[x]` Refactor top bar layout and remove notifications and chevron
+  - `[x]` Modify `src/components/ui/top-bar.tsx` to remove bell, badge, chevron, and profile click interactions
+  - `[x]` Bind avatar, name, and role dynamically to current authenticated user
+- `[x]` Bind Athlete Dashboard to dynamic demo context
+  - `[x]` Refactor `src/components/athlete/athlete-dashboard-view.tsx` to read all parameters from `currentAthlete`
+  - `[x]` Bind greeting, readiness, performance, recovery, fatigue, session, contributors, and competition
+  - `[x]` Connect SVG performance chart to dynamic `performance.history` props in `src/components/athlete/dashboard-trend-chart.tsx`
+  - `[x]` Design dynamic manual telemetry input form in the athlete dashboard view
+- `[x]` Bind Coach Dashboard to dynamic demo context
+  - `[x]` Refactor `src/app/(coach)/coach/page.tsx` to read the shared athletes list
+  - `[x]` Compute summary metrics and alerts dynamically from actual data
+  - `[x]` Setup coach detail navigation page: `/coach/athletes/[athleteId]`
+- `[x]` Clean up navigation links and create placeholder sections
+  - `[x]` Implement reusable layout and views for Performance, Recovery, Fatigue, Insights, Progress, Events, and Teams
+  - `[x]` Ensure sidebar links navigate cleanly without dead interactions or hash fragment redirects
+  - `[x]` Hook sidebar notification badge count to dynamic unread notifications state
+- `[x]` Apply visual polish: glass system, micro-interactions, accessibility, and tests
+  - `[x]` Tune Level 1-3 glass materials, border highlights, and hover animations in `globals.css`
+  - `[x]` Verify layout responsiveness, keyboard accessibility, and contrast
+  - `[x]` Run validation tests: `npm run lint`, `npx tsc --noEmit`, and `npm run build`

@@ -46,6 +46,14 @@
   --chart-baseline: rgba(255,255,255,0.08);
   --chart-tooltip-bg: #0C0E11;
   --backdrop-bg: rgba(0, 0, 0, 0.60);
+
+  /* Radial Pointer Light Glow */
+  --radial-glow-color: rgba(255, 255, 255, 0.04);
+
+  /* Hero Environment & Athlete Styles */
+  --hero-bg-filter: brightness(0.18) contrast(1.15) saturate(0.75);
+  --hero-athlete-blend: normal;
+  --hero-athlete-filter: brightness(0.85) contrast(1.1);
 }
 
 [data-theme="dark"] {
@@ -89,6 +97,14 @@
   --chart-baseline: rgba(255,255,255,0.08);
   --chart-tooltip-bg: #0C0E11;
   --backdrop-bg: rgba(0, 0, 0, 0.60);
+
+  /* Radial Pointer Light Glow */
+  --radial-glow-color: rgba(255, 255, 255, 0.04);
+
+  /* Hero Environment & Athlete Styles */
+  --hero-bg-filter: brightness(0.18) contrast(1.15) saturate(0.75);
+  --hero-athlete-blend: normal;
+  --hero-athlete-filter: brightness(0.85) contrast(1.1);
 }
 
 [data-theme="light"] {
@@ -132,6 +148,14 @@
   --chart-baseline: rgba(20,25,24,0.06);
   --chart-tooltip-bg: #FFFFFF;
   --backdrop-bg: rgba(20, 25, 24, 0.18);
+
+  /* Radial Pointer Light Glow */
+  --radial-glow-color: rgba(0, 0, 0, 0.015);
+
+  /* Hero Environment & Athlete Styles */
+  --hero-bg-filter: none;
+  --hero-athlete-blend: normal;
+  --hero-athlete-filter: none;
 }
 
 @theme inline {
@@ -272,12 +296,18 @@ body {
 }
 
 /* Targeted transitions for theme switching */
-body, aside, header, nav, main, div, button, input, select, a, svg, text {
-  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              color 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+html,
+body,
+* {
+  transition-property:
+    background-color,
+    border-color,
+    color,
+    box-shadow,
+    fill,
+    stroke;
+  transition-duration: 220ms;
+  transition-timing-function: ease;
 }
 
 /* Atmospheric Glowing Orbs */
@@ -379,13 +409,162 @@ body, aside, header, nav, main, div, button, input, select, a, svg, text {
   scrollbar-width: none;
 }
 
+/* Premium Glassmorphism Floating Card */
+@keyframes sweep {
+  0% {
+    left: -150%;
+  }
+  50% {
+    left: 150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+.hero-glass-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  transition: background-color 400ms ease, border-color 400ms ease, box-shadow 400ms ease, backdrop-filter 400ms ease;
+  will-change: transform;
+}
+
+/* Light mode specific glass card values */
+[data-theme="light"] .hero-glass-card {
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(24px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(115%) !important;
+  border: 1px solid rgba(20, 25, 30, 0.10) !important;
+  box-shadow: 
+    0 24px 70px rgba(20, 25, 30, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.50) !important;
+}
+
+/* Dark mode specific glass card values */
+[data-theme="dark"] .hero-glass-card {
+  background: rgba(8, 10, 12, 0.68) !important;
+  backdrop-filter: blur(24px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(125%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Diagonal glass reflection sweep effect */
+.hero-glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.07) 50%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 6;
+  animation: sweep 12s infinite ease-in-out;
+}
+
+[data-theme="light"] .hero-glass-card::after {
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 65%
+  ) !important;
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  body, aside, header, nav, main, div, button, input, select, a, svg, text {
+  html,
+  body,
+  * {
     transition: none !important;
     animation: none !important;
   }
-  .card-depth-interactive, .glass-interactive, .card-depth-interactive:hover, .glass-interactive:hover {
-    transform: none !important;
-  }
 }
+
+/* ============================================================
+   LUDIS THEME CUSTOM UTILITY CLASSES
+   ============================================================ */
+
+/* Theme-aware logo inverted style */
+img.logo-img-inverted {
+  mix-blend-mode: screen;
+  filter: invert(1);
+}
+
+[data-theme="light"] img.logo-img-inverted {
+  filter: none !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* Theme Toggle Sun/Moon Icon Visibility */
+.theme-icon-light {
+  display: block;
+}
+.theme-icon-dark {
+  display: none;
+}
+
+html.dark .theme-icon-light,
+[data-theme="dark"] .theme-icon-light {
+  display: none;
+}
+
+html.dark .theme-icon-dark,
+[data-theme="dark"] .theme-icon-dark {
+  display: block;
+}
+
+/* Hero Layer Visibility — Light-only / Dark-only elements */
+.hero-light-only {
+  display: block;
+}
+.hero-dark-only {
+  display: none;
+}
+
+html.dark .hero-light-only,
+[data-theme="dark"] .hero-light-only {
+  display: none;
+}
+
+html.dark .hero-dark-only,
+[data-theme="dark"] .hero-dark-only {
+  display: block;
+}
+
+/* Flexbox variant for dark-only elements that need flex display */
+.hero-dark-only-flex {
+  display: none;
+}
+
+html.dark .hero-dark-only-flex,
+[data-theme="dark"] .hero-dark-only-flex {
+  display: flex;
+}
+
+/* Theme-aware Scrolled/Default Navbar Backgrounds */
+header.nav-default {
+  background-color: rgba(10, 12, 14, 0.65);
+}
+header.nav-scrolled {
+  background-color: rgba(10, 12, 14, 0.82);
+}
+
+[data-theme="light"] header.nav-default,
+html.light header.nav-default {
+  background-color: rgba(255, 255, 255, 0.65);
+}
+[data-theme="light"] header.nav-scrolled,
+html.light header.nav-scrolled {
+  background-color: rgba(255, 255, 255, 0.82);
+}
+
+
+
+

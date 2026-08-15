@@ -1,94 +1,86 @@
+'use client';
+
 // Ludis — Athlete Profile Page
-// Includes coach access management (permissions are product logic, not decoration).
-
+import { useState } from 'react';
+import { useDemo } from '@/lib/demo/demo-context';
 import { PageHeader } from '@/components/ui/page-header';
-import { Card, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { StatusBadge } from '@/components/ui/status-badge';
-import { getCurrentAthlete } from '@/lib/services/data-service';
-import { capitalize } from '@/lib/utils';
+import { ProfileHeader } from '@/components/athlete/profile/profile-header';
+import { PersonalInfoCard } from '@/components/athlete/profile/personal-info-card';
+import { BodyInformationCard } from '@/components/athlete/profile/body-information-card';
+import { RecentBodyUpdates } from '@/components/athlete/profile/recent-body-updates';
+import { ProfileEditForm } from '@/components/athlete/profile/profile-edit-form';
 
-export default function ProfilePage() {
+export default function AthleteProfilePage() {
+  const { getCurrentAthlete, updateAthleteProfile, getProfileMeasurementHistory } = useDemo();
   const athlete = getCurrentAthlete();
+  const [isEditing, setIsEditing] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const logs = getProfileMeasurementHistory(athlete.userId || 'usr-001');
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleSaveFullProfile = (updates: {
+    fullName: string;
+    firstName?: string;
+    lastName?: string;
+    age: number;
+    sport: string;
+    competitionLevel: string;
+    seasonBlock: string;
+    height: number;
+    weight: number;
+  }) => {
+    updateAthleteProfile(athlete.id, updates);
+    setIsEditing(false);
+    showToast('Profile updated');
+  };
+
+  const handleUpdateBodyInfo = (bodyUpdates: { height?: number; weight?: number }) => {
+    updateAthleteProfile(athlete.id, bodyUpdates);
+    showToast('Body measurements updated');
+  };
 
   return (
-    <div className="max-w-4xl">
-      <PageHeader title="Profile & Settings" section="Profile" />
+    <div className="max-w-4xl space-y-6 select-none mx-auto text-left">
+      <div className="flex items-center justify-between">
+        <PageHeader
+          title="PROFILE"
+          subtitle="Manage your personal information."
+          section="Profile"
+        />
+        {toastMessage && (
+          <div className="px-3.5 py-1.5 rounded-lg bg-brand-soft border border-brand/30 text-brand font-semibold text-xs animate-fade-in">
+            ✓ {toastMessage}
+          </div>
+        )}
+      </div>
 
-      {/* Profile info */}
-      <Card className="mb-6">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="h-16 w-16 rounded-full bg-surface-overlay flex items-center justify-center text-xl font-bold text-text-secondary">
-            {athlete.name.charAt(0)}
+      <ProfileHeader
+        athlete={athlete}
+        isEditing={isEditing}
+        onEditToggle={() => setIsEditing(true)}
+      />
+
+      {isEditing ? (
+        <ProfileEditForm
+          athlete={athlete}
+          onSave={handleSaveFullProfile}
+          onCancel={() => setIsEditing(false)}
+        />
+      ) : (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <PersonalInfoCard athlete={athlete} />
+            <BodyInformationCard athlete={athlete} onUpdateBody={handleUpdateBodyInfo} />
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-text-primary">{athlete.name}</h2>
-            <p className="text-sm text-text-secondary">
-              {capitalize(athlete.sport)} • {capitalize(athlete.experienceLevel)} • Age {athlete.age}
-            </p>
-          </div>
+
+          <RecentBodyUpdates logs={logs} />
         </div>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="text-text-muted">Competition Level</span>
-            <p className="text-text-primary font-medium mt-0.5">{capitalize(athlete.competitionContext.level)}</p>
-          </div>
-          <div>
-            <span className="text-text-muted">Season</span>
-            <p className="text-text-primary font-medium mt-0.5">{athlete.competitionContext.currentSeason.replace('_', ' ')}</p>
-          </div>
-          {athlete.bodyMetrics.heightCm && (
-            <div>
-              <span className="text-text-muted">Height</span>
-              <p className="text-text-primary font-medium mt-0.5">{athlete.bodyMetrics.heightCm} cm</p>
-            </div>
-          )}
-          {athlete.bodyMetrics.weightKg && (
-            <div>
-              <span className="text-text-muted">Weight</span>
-              <p className="text-text-primary font-medium mt-0.5">{athlete.bodyMetrics.weightKg} kg</p>
-            </div>
-          )}
-        </div>
-      </Card>
-
-      {/* Coach Access Management */}
-      <Card className="mb-6">
-        <CardTitle>Coach Access</CardTitle>
-        <CardDescription>
-          You control which coaches can view your data. Coaches only see data you explicitly permit.
-        </CardDescription>
-
-        <div className="mt-4 space-y-3">
-          <div className="flex items-center justify-between py-2 border-b border-border-subtle">
-            <div>
-              <span className="text-sm font-medium text-text-primary">Coach Martinez</span>
-              <p className="text-xs text-text-secondary">Performance, Recovery, Training Sessions</p>
-            </div>
-            <StatusBadge status="positive" label="Active" size="sm" />
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <div>
-              <span className="text-sm font-medium text-text-primary">Coach Williams</span>
-              <p className="text-xs text-text-secondary">Pending access request</p>
-            </div>
-            <div className="flex gap-2">
-              <Button size="sm" variant="primary">Approve</Button>
-              <Button size="sm" variant="ghost">Deny</Button>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Privacy notice */}
-      <Card>
-        <CardTitle>Data Privacy</CardTitle>
-        <CardDescription>
-          Your health and performance data is permission-controlled. Only coaches you explicitly approve
-          can access your data, and only within the scopes you grant. Ludis does not share your data
-          with third parties.
-        </CardDescription>
-      </Card>
+      )}
     </div>
   );
 }
