@@ -85,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, _password: string) => {
+    void _password;
     setState((s) => ({ ...s, isLoading: true, error: null }));
     // Simulate network delay
     await new Promise((r) => setTimeout(r, 500));
@@ -99,6 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = useCallback(
     async (email: string, _password: string, role: UserRole) => {
+      void _password;
       setState((s) => ({ ...s, isLoading: true, error: null }));
       await new Promise((r) => setTimeout(r, 500));
 
