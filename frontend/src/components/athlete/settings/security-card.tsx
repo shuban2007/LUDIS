@@ -6,7 +6,7 @@ import { StatusBadge } from '@/components/ui/status-badge';
 
 export function SecurityCard() {
   return (
-    <Card className="p-5 text-left">
+    <Card className="p-5 text-left w-full min-w-0">
       <CardTitle>
         Security
       </CardTitle>
@@ -14,7 +14,7 @@ export function SecurityCard() {
         Monitor your active sessions and credentials security.
       </CardDescription>
 
-      <div className="mt-4 space-y-3 text-xs">
+      <div className="mt-4 space-y-3 text-xs min-w-0">
         <div className="flex items-center justify-between py-2 border-b border-border-subtle">
           <span className="font-semibold text-foreground">Current Session</span>
           <StatusBadge status="positive" label="Active" size="sm" />

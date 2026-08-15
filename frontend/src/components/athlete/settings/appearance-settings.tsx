@@ -8,7 +8,7 @@ export function AppearanceSettings() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <Card className="p-5 text-left">
+    <Card className="p-5 text-left w-full min-w-0">
       <CardTitle>
         Appearance
       </CardTitle>
@@ -16,9 +16,9 @@ export function AppearanceSettings() {
         Select your layout design interface preferences.
       </CardDescription>
 
-      <div className="mt-4 flex items-center justify-between py-2">
+      <div className="mt-4 flex items-center justify-between py-2 gap-3 min-w-0">
         <span className="text-xs font-semibold text-foreground">Theme Selection</span>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           {/* Light Theme Button */}
           <button
             type="button"

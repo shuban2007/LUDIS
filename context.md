@@ -25,7 +25,11 @@
 
 ## Tech Stack & Architecture
 
-- **Framework**: Next.js 16 (App Router)
+- **Repository Structure**: Monorepo / npm Workspace layout with clean separation:
+  - `/frontend`: Next.js 16 App Router web application (`frontend/src/`, `frontend/public/`, `frontend/package.json`).
+  - `/backend`: Architectural boundary reserved for future persistence, database services, and Python ML microservices (`backend/src/`, `backend/package.json`, `backend/README.md`).
+  - `/`: Workspace delegator with root workspace scripts (`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`).
+- **Framework**: Next.js 16 (App Router in `frontend/src/app`)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4 + Centralized Theme Token System (`globals.css`) utilizing `[data-theme="dark"]`/`[data-theme="light"]` and `html.dark`/`html.light` selectors. Widescreen boundaries scaled to `max-w-[90rem]` (1440px), with vertical section padding set to `py-8 md:py-12` (and compact vertical intervals on CTA/Footer) to keep components stacked closely with minimal blank space.
 - **Theme Architecture**: Hydration-safe Theme Provider (`src/lib/theme/theme-provider.tsx`) serving as the single source of truth for dynamic theme states, using localStorage persistence, fallback-to-dark rules, and synchronization to the document `<html>` attribute class list and dataset theme. Executes an inline initialization script inside `layout.tsx` to resolve theme state synchronously before first paint. All visual elements, background gradients, scrolled headers, image filters, and Sun/Moon toggle icons are rendered as unified DOM structures and styled dynamically via CSS variables to fully prevent hydration mismatches and theme flashes.

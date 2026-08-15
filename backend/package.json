@@ -1,0 +1,9 @@
+{
+  "name": "@ludis/backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo \"No backend service configured yet. See backend/README.md\"",
+    "build": "echo \"No backend build required.\""
+  }
+}

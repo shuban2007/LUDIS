@@ -72,12 +72,12 @@ export function MeasurementHistory({ healthMeasurements, onSaveEdit, onDelete }:
   };
 
   return (
-    <div className="space-y-3 text-left">
+    <div className="space-y-3 text-left min-w-0">
       <h3 className="text-xs font-bold uppercase tracking-widest text-brand">
         Measurement History
       </h3>
 
-      <div className="space-y-2 max-h-[480px] overflow-y-auto pr-1 no-scrollbar">
+      <div className="space-y-2 max-h-[480px] overflow-y-auto pr-1 no-scrollbar min-w-0">
         {healthMeasurements
           .filter((m) => m.userId === 'usr-001')
           .slice()
@@ -88,15 +88,15 @@ export function MeasurementHistory({ healthMeasurements, onSaveEdit, onDelete }:
             return (
               <Card
                 key={m.id}
-                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-border-subtle bg-surface-2/40 transition-colors"
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-border-subtle bg-surface-2/40 transition-colors min-w-0 w-full"
               >
-                <div className="text-left space-y-1">
+                <div className="text-left space-y-1 min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-bold text-foreground">
                       {formatMetricLabel(m.metric)}
                     </span>
-                    <span className="h-3 border-r border-border-subtle" />
-                    <span className="text-[10px] text-foreground-muted font-mono uppercase">
+                    <span className="h-3 border-r border-border-subtle hidden sm:inline-block" />
+                    <span className="text-[10px] text-foreground-muted font-mono uppercase truncate">
                       {m.source === 'google_fit' ? 'Google Fit' : m.source === 'wearable' ? 'Wearable' : 'Manual'} · {m.timestamp}
                     </span>
                   </div>

@@ -43,16 +43,16 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-6xl space-y-6 select-none mx-auto text-left">
+    <div className="max-w-[1340px] w-full mx-auto space-y-6 text-left min-w-0">
       <PageHeader
         title="Settings"
         subtitle="Manage your Ludis preferences, data connections, and privacy."
         section="Settings"
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full min-w-0">
         {/* Left Column (Health integrations & Logs history) */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-6 min-w-0">
           <HealthDataCard
             googleFitSyncTime={googleFitSyncTime}
             onSync={syncGoogleFitSources}
@@ -65,7 +65,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Right Column (Privacy, alerts, theme, and credentials checks) */}
-        <div className="lg:col-span-5 space-y-6">
+        <div className="lg:col-span-5 space-y-6 min-w-0">
           <CoachAccessCard />
           <NotificationSettings
             preferences={notificationPreferences}

@@ -7,6 +7,7 @@ interface StatusBadgeProps {
   status: StatusSeverity;
   label: string;
   size?: 'sm' | 'md';
+  className?: string;
 }
 
 const statusStyles: Record<StatusSeverity, string> = {
@@ -23,10 +24,10 @@ const sizeStyles = {
   md: 'text-xs px-2.5 py-1',
 };
 
-export function StatusBadge({ status, label, size = 'md' }: StatusBadgeProps) {
+export function StatusBadge({ status, label, size = 'md', className = '' }: StatusBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border font-medium ${statusStyles[status]} ${sizeStyles[size]}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border font-medium ${statusStyles[status]} ${sizeStyles[size]} ${className}`}
       role="status"
       aria-label={label}
     >

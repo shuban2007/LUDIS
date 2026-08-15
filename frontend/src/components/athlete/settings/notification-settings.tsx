@@ -17,7 +17,7 @@ interface NotificationSettingsProps {
 
 export function NotificationSettings({ preferences, onUpdate }: NotificationSettingsProps) {
   return (
-    <Card className="p-5 text-left">
+    <Card className="p-5 text-left w-full min-w-0">
       <CardTitle>
         Notifications
       </CardTitle>
@@ -25,7 +25,7 @@ export function NotificationSettings({ preferences, onUpdate }: NotificationSett
         Configure alert notifications for training indicators and competitions.
       </CardDescription>
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-4 space-y-3 min-w-0">
         {/* Performance Alerts */}
         <div className="flex items-center justify-between py-2 border-b border-border-subtle">
           <span className="text-xs font-semibold text-foreground">Performance alerts</span>
