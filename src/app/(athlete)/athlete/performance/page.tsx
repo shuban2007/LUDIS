@@ -3,7 +3,6 @@
 
 import { PageHeader } from '@/components/ui/page-header';
 import { InsightCard } from '@/components/shared/insight-card';
-import { MetricCard } from '@/components/shared/metric-card';
 import { TrendChart } from '@/components/shared/trend-chart';
 import { ConfidenceIndicator } from '@/components/shared/confidence-indicator';
 import { Card } from '@/components/ui/card';

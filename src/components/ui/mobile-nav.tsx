@@ -18,7 +18,7 @@ export function MobileNav({ items }: MobileNavProps) {
 
   return (
     <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface-base border-t border-border-subtle safe-bottom backdrop-blur-lg bg-surface-base/95"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-glass-bg border-t border-border-subtle safe-bottom backdrop-blur-lg"
       aria-label="Mobile navigation"
     >
       <ul className="flex items-center justify-around h-14">
@@ -28,8 +28,8 @@ export function MobileNav({ items }: MobileNavProps) {
             <li key={item.href} className="flex-1">
               <Link
                 href={item.href}
-                className={`nav-item flex flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-bold transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-[rgba(0,191,166,0.45)] focus-visible:outline-offset-2 rounded-md ${
-                  isActive ? 'text-brand-primary' : 'text-text-muted hover:text-text-secondary'
+                className={`nav-item flex flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-md ${
+                  isActive ? 'text-brand' : 'text-foreground-muted hover:text-foreground-secondary'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >

@@ -1,5 +1,6 @@
 // Ludis — Performance Trend SVG Line Chart Component
 // Renders 10-day trend line with shaded baseline band (76-80), grid lines, and active point indicator.
+// Dynamic theme-aware SVG rendering using CSS variable design tokens.
 
 'use client';
 
@@ -51,10 +52,10 @@ export function DashboardTrendChart({
   const baselineHeight = baselineBottomY - baselineTopY;
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden select-none">
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-auto overflow-visible select-none"
+        className="w-full h-auto overflow-visible"
         role="img"
         aria-label="Performance trend chart"
       >
@@ -75,7 +76,7 @@ export function DashboardTrendChart({
                 x={padding.left - 10}
                 y={yPos + 4}
                 textAnchor="end"
-                className="text-[10px] font-mono fill-[#777777]"
+                className="text-[10px] font-mono fill-foreground-muted"
               >
                 {tick}
               </text>
@@ -89,7 +90,7 @@ export function DashboardTrendChart({
           y={baselineTopY}
           width={innerWidth}
           height={baselineHeight}
-          fill="var(--chart-band-bg)"
+          fill="var(--chart-baseline)"
         />
         {/* Top & Bottom Baseline dashed borders */}
         <line
@@ -97,7 +98,7 @@ export function DashboardTrendChart({
           y1={baselineTopY}
           x2={width - padding.right}
           y2={baselineTopY}
-          stroke="var(--chart-band-border)"
+          stroke="var(--chart-axis)"
           strokeWidth={1}
           strokeDasharray="4 4"
         />
@@ -106,17 +107,28 @@ export function DashboardTrendChart({
           y1={baselineBottomY}
           x2={width - padding.right}
           y2={baselineBottomY}
-          stroke="var(--chart-band-border)"
+          stroke="var(--chart-axis)"
           strokeWidth={1}
           strokeDasharray="4 4"
         />
 
+        {/* Performance Trend Area Fill */}
+        <polygon
+          points={`${trend.map((pt, i) => `${getX(i)},${getY(pt.value)}`).join(' ')} ${getX(trend.length - 1)},${getY(yMin)} ${getX(0)},${getY(yMin)}`}
+          fill="url(#chart-trend-area-gradient)"
+        />
+        <defs>
+          <linearGradient id="chart-trend-area-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--chart-primary)" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="var(--chart-primary)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
 
-        {/* Teal Performance Line */}
+        {/* Performance Line */}
         <path
           d={linePath}
           fill="none"
-          stroke="#00BFA6"
+          stroke="var(--chart-primary)"
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -134,7 +146,7 @@ export function DashboardTrendChart({
               key={i}
               onMouseEnter={() => setHoveredIndex(i)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="cursor-pointer group"
+              className="cursor-pointer group animate-none"
             >
               {/* Highlight Outer Ring for current/last point */}
               {isLast && (
@@ -143,7 +155,7 @@ export function DashboardTrendChart({
                   cy={cy}
                   r={8}
                   fill="none"
-                  stroke="#00BFA6"
+                  stroke="var(--chart-primary)"
                   strokeWidth={2}
                   className="animate-pulse"
                 />
@@ -156,7 +168,7 @@ export function DashboardTrendChart({
                   cy={cy}
                   r={7}
                   fill="none"
-                  stroke="#00BFA6"
+                  stroke="var(--chart-primary)"
                   strokeWidth={1.5}
                   opacity={0.8}
                 />
@@ -167,7 +179,7 @@ export function DashboardTrendChart({
                 cx={cx}
                 cy={cy}
                 r={3.5}
-                fill="#00BFA6"
+                fill="var(--chart-primary)"
               />
             </g>
           );
@@ -182,7 +194,7 @@ export function DashboardTrendChart({
               x={cx}
               y={height - 6}
               textAnchor="middle"
-              className="text-[10px] font-sans fill-[#777777]"
+              className="text-[10px] font-sans fill-foreground-muted"
             >
               {pt.date}
             </text>
@@ -193,14 +205,14 @@ export function DashboardTrendChart({
       {/* Hover Tooltip Overlay */}
       {hoveredIndex !== null && (
         <div
-          className="absolute z-20 pointer-events-none bg-[#0B0C0F] border border-white/10 px-2.5 py-1 rounded shadow-lg text-[11px] font-mono text-text-primary -translate-x-1/2 -translate-y-full mb-2"
+          className="absolute z-20 pointer-events-none bg-chart-tooltip-bg border border-border-default px-2.5 py-1 rounded shadow-card text-[11px] font-mono text-foreground -translate-x-1/2 -translate-y-full mb-2"
           style={{
             left: `${(getX(hoveredIndex) / width) * 100}%`,
             top: `${(getY(trend[hoveredIndex].value) / height) * 100}%`,
           }}
         >
-          <span className="text-brand-primary font-bold">{trend[hoveredIndex].value} pts</span>
-          <span className="text-text-muted ml-1">({trend[hoveredIndex].date})</span>
+          <span className="text-brand font-bold">{trend[hoveredIndex].value} pts</span>
+          <span className="text-foreground-secondary ml-1">({trend[hoveredIndex].date})</span>
         </div>
       )}
     </div>

@@ -1,4 +1,6 @@
 // Ludis Landing Components — Personal Baseline Section Component
+// Dynamic theme-aware SVG line chart for personal baseline representation.
+
 'use client';
 
 import { ScrollReveal } from './scroll-reveal';
@@ -64,14 +66,14 @@ export function BaselineVisual() {
         <div className="lg:col-span-5 space-y-6 text-left">
           <ScrollReveal delay={0.05} duration={0.5} offset={20}>
             <h2 className="text-4xl sm:text-6xl font-serif tracking-tight leading-[1.1]">
-              <span className="text-text-primary font-normal italic block">YOUR BASELINE.</span>
-              <span className="text-brand-primary font-bold block mt-1">NOT THE AVERAGE.</span>
+              <span className="text-foreground font-normal italic block">YOUR BASELINE.</span>
+              <span className="text-brand font-bold block mt-1">NOT THE AVERAGE.</span>
             </h2>
           </ScrollReveal>
 
           
           <ScrollReveal delay={0.15} duration={0.5} offset={20}>
-            <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-md">
+            <p className="text-base sm:text-lg text-foreground-secondary leading-relaxed max-w-md">
               We learn what&apos;s normal for you, then detect meaningful changes that actually matter.
             </p>
           </ScrollReveal>
@@ -79,7 +81,7 @@ export function BaselineVisual() {
           <ScrollReveal delay={0.25} duration={0.5} offset={20}>
             <a 
               href="#capabilities" 
-              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-primary hover:text-brand-primary-hover transition-colors duration-150 group"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand hover:text-brand-hover transition-colors duration-150 group"
             >
               SEE HOW BASELINE WORKS 
               <span className="transform group-hover:translate-x-1 transition-transform duration-150">→</span>
@@ -90,26 +92,26 @@ export function BaselineVisual() {
         {/* Right Column: Single Large Premium Visualizer */}
         <div className="lg:col-span-7">
           <ScrollReveal delay={0.2} duration={0.6} offset={20}>
-            <div className="bg-[#050607] border border-white/10 rounded-lg p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.35)] select-none">
+            <div className="bg-surface-1 border border-border-default rounded-lg p-6 sm:p-8 shadow-card select-none">
               
               {/* Header Info */}
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <span className="text-[9px] font-bold text-text-muted tracking-wider uppercase">
+                  <span className="text-[9px] font-bold text-foreground-muted tracking-wider uppercase">
                     PERSONAL BASELINE
                   </span>
-                  <div className="text-2xl sm:text-3xl font-bold text-brand-primary mt-1 font-sans">
+                  <div className="text-2xl sm:text-3xl font-bold text-brand mt-1 font-sans">
                     76 – 80
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[9px] font-bold text-text-muted tracking-wider uppercase">
+                  <span className="text-[9px] font-bold text-foreground-muted tracking-wider uppercase">
                     CURRENT
                   </span>
-                  <div className="text-2xl sm:text-3xl font-bold text-[#F5F5F5] mt-1 font-sans">
+                  <div className="text-2xl sm:text-3xl font-bold text-foreground mt-1 font-sans">
                     83
                   </div>
-                  <span className="text-[10px] text-brand-primary font-semibold uppercase mt-0.5 block">
+                  <span className="text-[10px] text-brand font-semibold uppercase mt-0.5 block">
                     Above baseline
                   </span>
                 </div>
@@ -124,14 +126,14 @@ export function BaselineVisual() {
                     y={bandTop}
                     width={chartW}
                     height={bandBottom - bandTop}
-                    fill="rgba(0, 191, 166, 0.04)"
+                    fill="var(--brand-soft)"
                   />
                   <line
                     x1={padL}
                     y1={bandTop}
                     x2={W - padR}
                     y2={bandTop}
-                    stroke="rgba(255, 255, 255, 0.08)"
+                    stroke="var(--border-default)"
                     strokeDasharray="3 3"
                     strokeWidth="1"
                   />
@@ -140,7 +142,7 @@ export function BaselineVisual() {
                     y1={bandBottom}
                     x2={W - padR}
                     y2={bandBottom}
-                    stroke="rgba(255, 255, 255, 0.08)"
+                    stroke="var(--border-default)"
                     strokeDasharray="3 3"
                     strokeWidth="1"
                   />
@@ -153,7 +155,7 @@ export function BaselineVisual() {
                       y1={toY(val)}
                       x2={W - padR}
                       y2={toY(val)}
-                      stroke="rgba(255, 255, 255, 0.04)"
+                      stroke="var(--border-subtle)"
                       strokeWidth="1"
                     />
                   ))}
@@ -165,7 +167,7 @@ export function BaselineVisual() {
                       x={padL - 8}
                       y={toY(val) + 3}
                       textAnchor="end"
-                      className="fill-text-muted text-[9px] font-sans"
+                      className="fill-foreground-secondary text-[9px] font-sans"
                     >
                       {val}
                     </text>
@@ -174,12 +176,12 @@ export function BaselineVisual() {
                   {/* Trend Area Gradient */}
                   <polygon
                     points={`${linePoints} ${toX(baselineTrend.length - 1)},${toY(yMin)} ${toX(0)},${toY(yMin)}`}
-                    fill="url(#baseline-gradient)"
+                    fill="url(#baseline-visual-gradient)"
                   />
                   <defs>
-                    <linearGradient id="baseline-gradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(0, 191, 166, 0.08)" />
-                      <stop offset="100%" stopColor="rgba(0, 191, 166, 0)" />
+                    <linearGradient id="baseline-visual-gradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--brand)" stopOpacity="0.08" />
+                      <stop offset="100%" stopColor="var(--brand)" stopOpacity="0" />
                     </linearGradient>
                   </defs>
 
@@ -187,7 +189,7 @@ export function BaselineVisual() {
                   <polyline
                     points={linePoints}
                     fill="none"
-                    stroke="var(--brand-primary)"
+                    stroke="var(--brand)"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -200,7 +202,8 @@ export function BaselineVisual() {
                       cx={toX(idx)}
                       cy={toY(pt.value)}
                       r={idx === baselineTrend.length - 1 ? 3 : 1.5}
-                      fill={idx === baselineTrend.length - 1 ? 'var(--brand-primary)' : 'rgba(0, 191, 166, 0.3)'}
+                      fill="var(--brand)"
+                      opacity={idx === baselineTrend.length - 1 ? 1 : 0.3}
                     />
                   ))}
 
@@ -210,7 +213,7 @@ export function BaselineVisual() {
                     cy={toY(baselineTrend[baselineTrend.length - 1].value)}
                     r="6"
                     fill="none"
-                    stroke="var(--brand-primary)"
+                    stroke="var(--brand)"
                     strokeWidth="0.75"
                     opacity="0.5"
                   />
@@ -222,7 +225,7 @@ export function BaselineVisual() {
                       x={toX(lbl.index)}
                       y={H - 5}
                       textAnchor="middle"
-                      className="fill-text-muted text-[9px] font-sans"
+                      className="fill-foreground-secondary text-[9px] font-sans"
                     >
                       {lbl.date}
                     </text>

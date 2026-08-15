@@ -56,10 +56,10 @@ export function CoachShell({ children }: { children: ReactNode }) {
                       <Link
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`nav-item flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-[rgba(0,191,166,0.45)] focus-visible:outline-offset-2 ${
+                        className={`nav-item flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
                           isActive
-                            ? 'bg-brand-primary-muted text-brand-primary border border-brand-primary/30 font-semibold'
-                            : 'border border-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary'
+                            ? 'bg-brand-soft text-brand font-semibold'
+                            : 'border border-transparent text-foreground-secondary hover:bg-surface-2 hover:text-foreground'
                         }`}
                         aria-current={isActive ? 'page' : undefined}
                       >

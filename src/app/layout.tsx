@@ -44,6 +44,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               (function() {
                 try {
                   var theme = localStorage.getItem('ludis-theme');
+                  if (!theme) {
+                    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  document.documentElement.setAttribute('data-theme', theme);
                   if (theme === 'light') {
                     document.documentElement.classList.add('light');
                   } else {

@@ -27,7 +27,9 @@
 
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4 + Semantic CSS variables (`globals.css`)
+- **Styling**: Tailwind CSS v4 + Centralized Theme Token System (`globals.css`) utilizing `[data-theme="dark"]` and `[data-theme="light"]` selectors.
+- **Theme Architecture**: Centralized Theme Provider (`src/lib/theme/theme-provider.tsx`) serving as the single source of truth for dynamic theme states, toggle controls, and synchronization to the document `<html>` attribute, fully avoiding theme-flash via head scripts.
+- **Unified Shell Layouts**: Shared responsive layout shells `AppTopBar` (`src/components/ui/top-bar.tsx`) and `AppSidebar` (`src/components/ui/sidebar.tsx`) that consume CSS variables directly to adapt interfaces on the fly.
 - **Animation**: `motion` (v12+, `motion/react`) for scroll-reveal and entrance animations. Reusable primitives in `src/components/landing/scroll-reveal.tsx`.
 - **Font**: Inter (`next/font/google`)
 - **Data Layer**: Service abstraction (`src/lib/services/data-service.ts`) backed by typed mock data (`src/lib/mock/`). Designed for Supabase PostgreSQL & Python ML API integration.

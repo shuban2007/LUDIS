@@ -1,6 +1,7 @@
 // Ludis — Premium Centered Sign-In & Sign-Up Modal
 // Integrates Framer Motion, accessibility focus trapping, scroll locking,
 // and conditional temporary demo login capabilities.
+// Refactored to dynamically adjust by theme using centralized system variables.
 
 'use client';
 
@@ -12,6 +13,7 @@ import { useAuth, useAuthModal, DEMO_AUTH_ENABLED } from '@/lib/auth';
 import { DemoLogin } from './demo-login';
 import { Button } from '@/components/ui/button';
 import type { UserRole } from '@/lib/types';
+import { useTheme } from '@/lib/theme/theme-provider';
 
 // ─────────────────────────────────────────────
 // Reusable SVG Icons (No third-party dependency)
@@ -124,6 +126,7 @@ function AppleIcon(props: React.SVGProps<SVGSVGElement>) {
 function AuthModalCard() {
   const { view, closeModal, switchView } = useAuthModal();
   const { login, signup, isLoading } = useAuth();
+  const { theme } = useTheme();
   const router = useRouter();
 
   const isSignIn = view === 'signin';
@@ -193,7 +196,7 @@ function AuthModalCard() {
     };
   }, []);
 
-  // Reset errors when helper switches
+  // Reset errors
   const clearValidationErrors = () => {
     setError(null);
     setFirstNameError(null);
@@ -203,12 +206,11 @@ function AuthModalCard() {
     setTermsError(null);
   };
 
-  // Submit Handler with Client validation
+  // Submit Handler
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (submitting) return;
 
-    // Reset error states
     setError(null);
     setFirstNameError(null);
     setLastNameError(null);
@@ -218,7 +220,6 @@ function AuthModalCard() {
 
     let hasError = false;
 
-    // Sign Up specific checks
     if (view === 'signup') {
       if (!firstName.trim()) {
         setFirstNameError('First name is required.');
@@ -234,7 +235,6 @@ function AuthModalCard() {
       }
     }
 
-    // Email validation
     if (!email) {
       setEmailError('Email is required.');
       hasError = true;
@@ -243,7 +243,6 @@ function AuthModalCard() {
       hasError = true;
     }
 
-    // Password validation
     if (!password) {
       setPasswordError('Password is required.');
       hasError = true;
@@ -259,7 +258,6 @@ function AuthModalCard() {
     setSubmitting(true);
 
     try {
-      // Testing/Demo error trigger:
       if (email.toLowerCase() === 'error@ludis.app') {
         await new Promise((r) => setTimeout(r, 600));
         setError('Invalid email or password.');
@@ -300,26 +298,18 @@ function AuthModalCard() {
       }}
       className={`relative z-10 w-full max-w-[calc(100vw-24px)] transition-all duration-300 ${
         isSignIn
-          ? 'sm:max-w-[580px] rounded-[18px] sm:rounded-[20px] bg-[#07090C]/96 p-5 sm:p-8 border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.65)]'
-          : 'sm:max-w-[680px] rounded-[20px] sm:rounded-[22px] bg-[#050709]/96 p-5 sm:p-12 border border-white/12 shadow-[0_30px_100px_rgba(0,0,0,0.70)]'
-      } backdrop-blur-[20px] overflow-hidden max-h-[calc(100vh-32px)] flex flex-col`}
-      style={
-        !isSignIn
-          ? {
-              backgroundImage:
-                'linear-gradient(135deg, rgba(255,255,255,0.018), transparent 35%, rgba(0,191,166,0.012))',
-            }
-          : undefined
-      }
+          ? 'sm:max-w-[580px] p-5 sm:p-8'
+          : 'sm:max-w-[680px] p-5 sm:p-12'
+      } bg-glass-bg border border-border-default rounded-[20px] shadow-elevated backdrop-blur-[20px] overflow-hidden max-h-[calc(100vh-32px)] flex flex-col`}
     >
       {/* Subtle Specular Top Arc Light Glow */}
-      <div className="absolute top-0 left-[15%] right-[15%] h-[1px] bg-gradient-to-r from-transparent via-[#00BFA6]/15 to-transparent pointer-events-none" />
-      <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-64 h-16 bg-[#00BFA6]/6 blur-xl rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-[15%] right-[15%] h-[1px] bg-gradient-to-r from-transparent via-brand/15 to-transparent pointer-events-none" />
+      <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-64 h-16 bg-brand/6 blur-xl rounded-full pointer-events-none" />
 
       {/* Close Button - Fixed relative to card, outside scroll container */}
       <button
         onClick={closeModal}
-        className="absolute top-[18px] right-[18px] z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/[0.02] border border-white/5 text-text-secondary hover:bg-white/[0.06] hover:text-text-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-all duration-150 cursor-pointer"
+        className="absolute top-[18px] right-[18px] z-10 w-9 h-9 flex items-center justify-center rounded-full bg-glass-bg border border-glass-border text-foreground-secondary hover:bg-surface-3 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-brand transition-all duration-150 cursor-pointer"
         aria-label="Close authentication modal"
       >
         <XMarkIcon className="h-[18px] w-[18px]" />
@@ -343,35 +333,35 @@ function AuthModalCard() {
                 width={56}
                 height={56}
                 priority
-                className="object-contain h-11 w-11 sm:h-[56px] sm:w-[56px]"
+                className="object-contain h-11 w-11 sm:h-[56px] sm:w-[56px] logo-img-inverted"
                 style={{
-                  mixBlendMode: 'screen',
-                  filter: 'invert(1)',
+                  mixBlendMode: theme === 'light' ? 'multiply' : 'screen',
+                  filter: theme === 'light' ? 'none' : 'invert(1)',
                 }}
               />
-              <div className="h-6 sm:h-8 border-r border-white/20" />
-              <span className="text-xl sm:text-2xl font-semibold tracking-[0.1em] text-text-primary uppercase font-sans">
+              <div className="h-6 sm:h-8 border-r border-border-subtle" />
+              <span className="text-xl sm:text-2xl font-semibold tracking-[0.1em] text-foreground uppercase font-sans">
                 LUDIS
               </span>
             </div>
 
             {/* Main Header & Subheading */}
             <div className="text-left mt-[28px]">
-              <h1 className="text-[34px] sm:text-[56px] font-serif font-light text-text-primary leading-[1.1] tracking-tight">
+              <h1 className="text-[34px] sm:text-[56px] font-serif font-light text-foreground leading-[1.1] tracking-tight">
                 {isSignIn ? (
                   <>
-                    Welcome <span className="text-brand-primary font-normal">Back</span>
-                    <span className="text-brand-primary">.</span>
+                    Welcome <span className="text-brand font-normal">Back</span>
+                    <span className="text-brand">.</span>
                   </>
                 ) : (
                   <>
                     Create your <br />
-                    <span className="text-brand-primary font-normal">Ludis</span> account
-                    <span className="text-brand-primary">.</span>
+                    <span className="text-brand font-normal">Ludis</span> account
+                    <span className="text-brand">.</span>
                   </>
                 )}
               </h1>
-              <p className="mt-[12px] text-[14px] sm:text-[18px] text-[#DCE1E6]/72 leading-relaxed max-w-[520px]">
+              <p className="mt-[12px] text-[14px] sm:text-[18px] text-foreground-secondary leading-relaxed max-w-[520px]">
                 {isSignIn
                   ? 'Sign in to continue your performance journey.'
                   : 'Join athletes and coaches using data to train smarter and perform better.'}
@@ -380,7 +370,7 @@ function AuthModalCard() {
 
             {/* Inline Global Error */}
             {error && (
-              <div className="mt-4 rounded-lg bg-status-risk-bg/30 border border-status-risk-border/30 p-3 text-xs text-status-risk text-center font-medium">
+              <div className="mt-4 rounded-lg bg-danger/10 border border-danger/30 p-3 text-xs text-danger text-center font-medium">
                 {error}
               </div>
             )}
@@ -390,23 +380,23 @@ function AuthModalCard() {
               {/* Role Segment Selector (Sign Up Only) */}
               {!isSignIn && (
                 <div className="mb-[20px]">
-                  <label className="block text-[11px] font-extrabold tracking-widest text-text-secondary uppercase mb-[8px]">
+                  <label className="block text-[11px] font-extrabold tracking-widest text-foreground-secondary uppercase mb-[8px]">
                     I AM A
                   </label>
                   <div
                     role="radiogroup"
                     aria-label="Select account role"
-                    className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-black/40 border border-white/8"
+                    className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-surface-2 border border-border-default"
                   >
                     <button
                       type="button"
                       role="radio"
                       aria-checked={role === 'athlete'}
                       onClick={() => setRole('athlete')}
-                      className={`py-2 px-3 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary ${
+                      className={`py-2 px-3 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand ${
                         role === 'athlete'
-                          ? 'bg-brand-primary-muted border border-[#00BFA6]/40 text-brand-primary'
-                          : 'bg-transparent border border-transparent text-text-secondary hover:text-text-primary'
+                          ? 'bg-brand-soft border border-brand/40 text-brand'
+                          : 'bg-transparent border border-transparent text-foreground-secondary hover:text-foreground'
                       }`}
                     >
                       ATHLETE
@@ -416,10 +406,10 @@ function AuthModalCard() {
                       role="radio"
                       aria-checked={role === 'coach'}
                       onClick={() => setRole('coach')}
-                      className={`py-2 px-3 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary ${
+                      className={`py-2 px-3 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand ${
                         role === 'coach'
-                          ? 'bg-brand-primary-muted border border-[#00BFA6]/40 text-brand-primary'
-                          : 'bg-transparent border border-transparent text-text-secondary hover:text-text-primary'
+                          ? 'bg-brand-soft border border-brand/40 text-brand'
+                          : 'bg-transparent border border-transparent text-foreground-secondary hover:text-foreground'
                       }`}
                     >
                       COACH
@@ -433,12 +423,12 @@ function AuthModalCard() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-[20px]">
                   {/* First Name */}
                   <div>
-                    <label htmlFor="modal-firstname" className="block text-[11px] font-bold tracking-wider text-text-secondary uppercase mb-[8px]">
+                    <label htmlFor="modal-firstname" className="block text-[11px] font-bold tracking-wider text-foreground-secondary uppercase mb-[8px]">
                       FIRST NAME
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <UserIcon className="h-5 w-5 text-text-muted" />
+                        <UserIcon className="h-5 w-5 text-foreground-muted" />
                       </div>
                       <input
                         ref={firstInputRef}
@@ -447,11 +437,11 @@ function AuthModalCard() {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         placeholder="First name"
-                        className="w-full h-[52px] sm:h-[54px] pl-12 pr-4 bg-white/[0.025] border border-white/14 rounded-[10px] text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 focus:outline-none focus:border-[#00BFA6] focus:ring-1 focus:ring-[#00BFA6]/18"
+                        className="w-full h-[52px] sm:h-[54px] pl-12 pr-4 bg-surface-2 border border-border-default rounded-[10px] text-sm text-foreground placeholder:text-foreground-muted transition-all duration-200 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/18"
                       />
                     </div>
                     {firstNameError && (
-                      <p className="mt-1.5 text-xs text-status-risk font-medium text-left">
+                      <p className="mt-1.5 text-xs text-danger font-medium text-left">
                         {firstNameError}
                       </p>
                     )}
@@ -459,12 +449,12 @@ function AuthModalCard() {
 
                   {/* Last Name */}
                   <div>
-                    <label htmlFor="modal-lastname" className="block text-[11px] font-bold tracking-wider text-text-secondary uppercase mb-[8px]">
+                    <label htmlFor="modal-lastname" className="block text-[11px] font-bold tracking-wider text-foreground-secondary uppercase mb-[8px]">
                       LAST NAME
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <UserIcon className="h-5 w-5 text-text-muted" />
+                        <UserIcon className="h-5 w-5 text-foreground-muted" />
                       </div>
                       <input
                         id="modal-lastname"
@@ -472,11 +462,11 @@ function AuthModalCard() {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         placeholder="Last name"
-                        className="w-full h-[52px] sm:h-[54px] pl-12 pr-4 bg-white/[0.025] border border-white/14 rounded-[10px] text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 focus:outline-none focus:border-[#00BFA6] focus:ring-1 focus:ring-[#00BFA6]/18"
+                        className="w-full h-[52px] sm:h-[54px] pl-12 pr-4 bg-surface-2 border border-border-default rounded-[10px] text-sm text-foreground placeholder:text-foreground-muted transition-all duration-200 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/18"
                       />
                     </div>
                     {lastNameError && (
-                      <p className="mt-1.5 text-xs text-status-risk font-medium text-left">
+                      <p className="mt-1.5 text-xs text-danger font-medium text-left">
                         {lastNameError}
                       </p>
                     )}
@@ -486,12 +476,12 @@ function AuthModalCard() {
 
               {/* Email Input */}
               <div>
-                <label htmlFor="modal-email" className="block text-[11px] font-bold tracking-wider text-text-secondary uppercase mb-[8px]">
+                <label htmlFor="modal-email" className="block text-[11px] font-bold tracking-wider text-foreground-secondary uppercase mb-[8px]">
                   EMAIL
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <EnvelopeIcon className="h-5 w-5 text-text-muted" />
+                    <EnvelopeIcon className="h-5 w-5 text-foreground-muted" />
                   </div>
                   <input
                     ref={isSignIn ? firstInputRef : undefined}
@@ -500,11 +490,11 @@ function AuthModalCard() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full h-[52px] sm:h-[54px] pl-12 pr-4 bg-white/[0.025] border border-white/14 rounded-[10px] text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 focus:outline-none focus:border-[#00BFA6] focus:ring-1 focus:ring-[#00BFA6]/18"
+                    className="w-full h-[52px] sm:h-[54px] pl-12 pr-4 bg-surface-2 border border-border-default rounded-[10px] text-sm text-foreground placeholder:text-foreground-muted transition-all duration-200 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/18"
                   />
                 </div>
                 {emailError && (
-                  <p className="mt-1.5 text-xs text-status-risk font-medium text-left">
+                  <p className="mt-1.5 text-xs text-danger font-medium text-left">
                     {emailError}
                   </p>
                 )}
@@ -512,12 +502,12 @@ function AuthModalCard() {
 
               {/* Password Input */}
               <div className="mt-[20px]">
-                <label htmlFor="modal-password" className="block text-[11px] font-bold tracking-wider text-text-secondary uppercase mb-[8px]">
+                <label htmlFor="modal-password" className="block text-[11px] font-bold tracking-wider text-foreground-secondary uppercase mb-[8px]">
                   PASSWORD
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <LockIcon className="h-5 w-5 text-text-muted" />
+                    <LockIcon className="h-5 w-5 text-foreground-muted" />
                   </div>
                   <input
                     id="modal-password"
@@ -525,13 +515,13 @@ function AuthModalCard() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={isSignIn ? 'Enter your password' : 'Create a password'}
-                    className="w-full h-[52px] sm:h-[54px] pl-12 pr-12 bg-white/[0.025] border border-white/14 rounded-[10px] text-sm text-text-primary placeholder:text-text-muted transition-all duration-200 focus:outline-none focus:border-[#00BFA6] focus:ring-1 focus:ring-[#00BFA6]/18"
+                    className="w-full h-[52px] sm:h-[54px] pl-12 pr-12 bg-surface-2 border border-border-default rounded-[10px] text-sm text-foreground placeholder:text-foreground-muted transition-all duration-200 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/18"
                   />
                   <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent hover:bg-white/[0.04] text-text-secondary hover:text-text-primary focus:outline-none cursor-pointer transition-colors"
+                      className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent hover:bg-surface-3 text-foreground-secondary hover:text-foreground focus:outline-none cursor-pointer transition-colors"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
@@ -539,7 +529,7 @@ function AuthModalCard() {
                   </div>
                 </div>
                 {passwordError && (
-                  <p className="mt-1.5 text-xs text-status-risk font-medium text-left">
+                  <p className="mt-1.5 text-xs text-danger font-medium text-left">
                     {passwordError}
                   </p>
                 )}
@@ -549,31 +539,31 @@ function AuthModalCard() {
                   <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[12px] mt-2">
                     <span
                       className={`flex items-center gap-1.5 transition-colors ${
-                        hasMinLength ? 'text-text-primary' : 'text-text-muted'
+                        hasMinLength ? 'text-foreground' : 'text-foreground-muted'
                       }`}
                     >
-                      <span className={hasMinLength ? 'text-brand-primary' : 'text-text-muted'}>•</span> 8+ characters
+                      <span className={hasMinLength ? 'text-brand' : 'text-foreground-muted'}>•</span> 8+ characters
                     </span>
                     <span
                       className={`flex items-center gap-1.5 transition-colors ${
-                        hasUppercase ? 'text-text-primary' : 'text-text-muted'
+                        hasUppercase ? 'text-foreground' : 'text-foreground-muted'
                       }`}
                     >
-                      <span className={hasUppercase ? 'text-brand-primary' : 'text-text-muted'}>•</span> 1 uppercase
+                      <span className={hasUppercase ? 'text-brand' : 'text-foreground-muted'}>•</span> 1 uppercase
                     </span>
                     <span
                       className={`flex items-center gap-1.5 transition-colors ${
-                        hasNumber ? 'text-text-primary' : 'text-text-muted'
+                        hasNumber ? 'text-foreground' : 'text-foreground-muted'
                       }`}
                     >
-                      <span className={hasNumber ? 'text-brand-primary' : 'text-text-muted'}>•</span> 1 number
+                      <span className={hasNumber ? 'text-brand' : 'text-foreground-muted'}>•</span> 1 number
                     </span>
                     <span
                       className={`flex items-center gap-1.5 transition-colors ${
-                        hasSpecialChar ? 'text-text-primary' : 'text-text-muted'
+                        hasSpecialChar ? 'text-foreground' : 'text-foreground-muted'
                       }`}
                     >
-                      <span className={hasSpecialChar ? 'text-brand-primary' : 'text-text-muted'}>•</span> 1 special character
+                      <span className={hasSpecialChar ? 'text-brand' : 'text-foreground-muted'}>•</span> 1 special character
                     </span>
                   </div>
                 )}
@@ -581,18 +571,18 @@ function AuthModalCard() {
 
               {/* Options (Remember Me / Forgot Password - Sign In Only) */}
               {isSignIn && (
-                <div className="mt-[16px] flex flex-wrap gap-y-2 items-center justify-between text-[12px] sm:text-[13px] text-text-secondary">
-                  <label className="flex items-center gap-2 cursor-pointer hover:text-text-primary transition-colors">
+                <div className="mt-[16px] flex flex-wrap gap-y-2 items-center justify-between text-[12px] sm:text-[13px] text-foreground-secondary">
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-foreground transition-colors">
                     <input
                       type="checkbox"
-                      className="h-4 w-4 rounded border-white/16 bg-white/[0.025] text-brand-primary focus:ring-0 focus:ring-offset-0 focus:outline-none accent-brand-primary"
+                      className="h-4.5 w-4.5 rounded border-border-default bg-surface-2 text-brand focus:ring-0 focus:ring-offset-0 focus:outline-none accent-brand"
                     />
                     <span>Remember me</span>
                   </label>
                   <a
                     href="#"
                     onClick={(e) => e.preventDefault()}
-                    className="hover:text-brand-primary font-medium transition-colors"
+                    className="hover:text-brand font-medium transition-colors"
                   >
                     Forgot password?
                   </a>
@@ -602,26 +592,26 @@ function AuthModalCard() {
               {/* Terms Checkbox (Sign Up Only) */}
               {!isSignIn && (
                 <div className="mt-[16px]">
-                  <label className="flex items-start gap-2.5 cursor-pointer text-[13px] text-text-secondary hover:text-text-primary transition-colors">
+                  <label className="flex items-start gap-2.5 cursor-pointer text-[13px] text-foreground-secondary hover:text-foreground transition-colors">
                     <input
                       type="checkbox"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
-                      className="h-4.5 w-4.5 rounded border-white/16 bg-white/[0.025] text-brand-primary focus:ring-0 focus:ring-offset-0 focus:outline-none accent-brand-primary mt-0.5"
+                      className="h-4.5 w-4.5 rounded border-border-default bg-surface-2 text-brand focus:ring-0 focus:ring-offset-0 focus:outline-none accent-brand mt-0.5"
                     />
                     <span className="leading-tight">
                       I agree to the{' '}
-                      <a href="#" onClick={(e) => e.preventDefault()} className="text-brand-primary hover:underline">
+                      <a href="#" onClick={(e) => e.preventDefault()} className="text-brand hover:underline">
                         Terms of Service
                       </a>{' '}
                       and{' '}
-                      <a href="#" onClick={(e) => e.preventDefault()} className="text-brand-primary hover:underline">
+                      <a href="#" onClick={(e) => e.preventDefault()} className="text-brand hover:underline">
                         Privacy Policy
                       </a>
                     </span>
                   </label>
                   {termsError && (
-                    <p className="mt-1.5 text-xs text-status-risk font-medium text-left">
+                    <p className="mt-1.5 text-xs text-danger font-medium text-left">
                       {termsError}
                     </p>
                   )}
@@ -633,7 +623,7 @@ function AuthModalCard() {
                 <Button
                   type="submit"
                   disabled={isBusy}
-                  className="w-full h-[52px] sm:h-[54px] text-sm font-bold tracking-widest uppercase transition-all duration-200 select-none hover:-translate-y-[1px] active:translate-y-[1px] bg-brand-primary text-text-inverse hover:bg-brand-primary-hover rounded-[10px] cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full h-[52px] sm:h-[54px] text-sm font-bold tracking-widest uppercase transition-all duration-200 select-none hover:-translate-y-[1px] active:translate-y-[1px] bg-brand text-brand-foreground hover:bg-brand-hover rounded-[10px] cursor-pointer flex items-center justify-center gap-2"
                 >
                   {isBusy ? (
                     isSignIn ? 'SIGNING IN...' : 'CREATING ACCOUNT...'
@@ -651,21 +641,21 @@ function AuthModalCard() {
               <div>
                 <div className="relative flex items-center justify-center my-[24px]">
                   <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                    <div className="w-full border-t border-white/10" />
+                    <div className="w-full border-t border-border-subtle" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-[#050709] px-3 text-[10px] font-extrabold tracking-widest text-text-muted">
+                    <span className="bg-surface-1 px-3 text-[10px] font-extrabold tracking-widest text-foreground-muted">
                       OR
                     </span>
                   </div>
                 </div>
 
-                {/* Social Sign-up Buttons (Muted placeholders, non-operational) */}
+                {/* Social Sign-up Buttons */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     type="button"
                     disabled
-                    className="h-[46px] sm:h-[48px] w-full flex items-center justify-center gap-2 rounded-[10px] bg-transparent border border-white/10 text-text-secondary opacity-40 cursor-not-allowed text-[13px] sm:text-[14px] font-medium"
+                    className="h-[46px] sm:h-[48px] w-full flex items-center justify-center gap-2 rounded-[10px] bg-surface-2 border border-border-default text-foreground-secondary opacity-40 cursor-not-allowed text-[13px] sm:text-[14px] font-medium"
                     aria-label="Google sign up unavailable"
                   >
                     <GoogleIcon className="h-4 w-4" /> Sign up with Google
@@ -673,7 +663,7 @@ function AuthModalCard() {
                   <button
                     type="button"
                     disabled
-                    className="h-[46px] sm:h-[48px] w-full flex items-center justify-center gap-2 rounded-[10px] bg-transparent border border-white/10 text-text-secondary opacity-40 cursor-not-allowed text-[13px] sm:text-[14px] font-medium"
+                    className="h-[46px] sm:h-[48px] w-full flex items-center justify-center gap-2 rounded-[10px] bg-surface-2 border border-border-default text-foreground-secondary opacity-40 cursor-not-allowed text-[13px] sm:text-[14px] font-medium"
                     aria-label="Apple sign up unavailable"
                   >
                     <AppleIcon className="h-4 w-4" /> Sign up with Apple
@@ -686,7 +676,7 @@ function AuthModalCard() {
             {isSignIn && DEMO_AUTH_ENABLED && <DemoLogin />}
 
             {/* Toggle Bottom Link */}
-            <div className="text-center text-xs text-text-muted mt-[22px]">
+            <div className="text-center text-xs text-foreground-muted mt-[22px]">
               {isSignIn ? (
                 <>
                   {"Don't have an account? "}
@@ -695,7 +685,7 @@ function AuthModalCard() {
                       clearValidationErrors();
                       switchView('signup');
                     }}
-                    className="text-brand-primary hover:text-brand-primary-hover font-semibold hover:underline transition-colors cursor-pointer"
+                    className="text-brand hover:text-brand-hover font-semibold hover:underline transition-colors cursor-pointer"
                   >
                     Create one →
                   </button>
@@ -708,7 +698,7 @@ function AuthModalCard() {
                       clearValidationErrors();
                       switchView('signin');
                     }}
-                    className="text-brand-primary hover:text-brand-primary-hover font-semibold hover:underline transition-colors cursor-pointer"
+                    className="text-brand hover:text-brand-hover font-semibold hover:underline transition-colors cursor-pointer"
                   >
                     Sign in →
                   </button>
@@ -753,15 +743,15 @@ export function AuthModal() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4 sm:p-6 md:p-10">
-          {/* Backdrop Blur Overlay: Darker, softer blur */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4 sm:p-6 md:p-10 select-none">
+          {/* Backdrop Blur Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={closeModal}
-            className="fixed inset-0 bg-black/58 backdrop-blur-[10px]"
+            className="fixed inset-0 bg-[var(--backdrop-bg)] backdrop-blur-[10px]"
             aria-hidden="true"
           />
 

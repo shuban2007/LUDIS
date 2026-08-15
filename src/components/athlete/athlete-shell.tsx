@@ -17,7 +17,7 @@ export function AthleteShell({ children }: { children: ReactNode }) {
   const notificationCount = getUnreadCount(userId);
 
   return (
-    <div className="flex min-h-screen bg-[#000000] text-text-primary">
+    <div className="flex min-h-screen bg-background text-text-primary">
       <Sidebar items={athleteNavItems} />
 
       <div className="flex-1 flex flex-col min-w-0">

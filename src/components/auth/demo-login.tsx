@@ -1,5 +1,5 @@
 // TEMPORARY DEMO AUTH
-// Remove this component when demo mode is retired.
+// Refactored to dynamically adjust by theme using centralized system variables.
 
 'use client';
 
@@ -38,21 +38,21 @@ export function DemoLogin() {
   const isBusy = loadingRole !== null;
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 select-none">
       {/* Subtle Separator */}
       <div className="relative flex items-center justify-center my-4">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-white/10" />
+          <div className="w-full border-t border-border-subtle" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-[#07090C] px-3 text-[10px] font-extrabold tracking-widest text-text-muted">
+          <span className="bg-surface-2 px-3 py-0.5 rounded text-[10px] font-extrabold tracking-widest text-foreground-muted">
             DEMO
           </span>
         </div>
       </div>
 
       {error && (
-        <div className="mb-3 rounded-lg bg-status-risk-bg/30 border border-status-risk-border/30 p-2.5 text-xs text-status-risk text-center">
+        <div className="mb-3 rounded-lg bg-danger/10 border border-danger/30 p-2.5 text-xs text-danger text-center font-medium">
           {error}
         </div>
       )}
@@ -63,7 +63,7 @@ export function DemoLogin() {
           type="button"
           onClick={() => handleDemoLogin('athlete')}
           disabled={isBusy}
-          className="h-10 w-full rounded-lg border border-white/8 bg-white/[0.02] text-[10px] sm:text-xs font-bold tracking-wider uppercase text-text-secondary hover:text-text-primary hover:border-brand-primary/50 hover:bg-brand-primary-soft transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+          className="h-10 w-full rounded-lg border border-border-default bg-surface-2 text-[10px] sm:text-xs font-bold tracking-wider uppercase text-foreground-secondary hover:text-foreground hover:border-brand/50 hover:bg-brand-soft transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         >
           {loadingRole === 'athlete' ? 'SIGNING IN...' : 'ATHLETE'}
         </button>
@@ -71,7 +71,7 @@ export function DemoLogin() {
           type="button"
           onClick={() => handleDemoLogin('coach')}
           disabled={isBusy}
-          className="h-10 w-full rounded-lg border border-white/8 bg-white/[0.02] text-[10px] sm:text-xs font-bold tracking-wider uppercase text-text-secondary hover:text-text-primary hover:border-brand-primary/50 hover:bg-brand-primary-soft transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+          className="h-10 w-full rounded-lg border border-border-default bg-surface-2 text-[10px] sm:text-xs font-bold tracking-wider uppercase text-foreground-secondary hover:text-foreground hover:border-brand/50 hover:bg-brand-soft transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         >
           {loadingRole === 'coach' ? 'SIGNING IN...' : 'COACH'}
         </button>
