@@ -26,7 +26,7 @@
 ## Tech Stack & Architecture
 
 - **Repository Structure**: Monorepo / npm Workspace layout with clean separation:
-  - `/frontend`: Next.js 16 App Router web application (`frontend/src/`, `frontend/public/`, `frontend/package.json`).
+  - `/frontend`: Next.js 16 App Router web application (`frontend/src/`, `frontend/public/`, `frontend/package.json`). Serving as Vercel deployment Root Directory (`Root Directory: frontend`, `Build Command: npm run build`, `Output Directory: [default]`).
   - `/backend`: Architectural boundary reserved for future persistence, database services, and Python ML microservices (`backend/src/`, `backend/package.json`, `backend/README.md`).
   - `/`: Workspace delegator with root workspace scripts (`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`).
 - **Framework**: Next.js 16 (App Router in `frontend/src/app`)
