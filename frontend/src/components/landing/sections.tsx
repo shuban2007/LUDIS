@@ -12,6 +12,7 @@ import type { Variants } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { LudisLogo } from '@/components/ui/ludis-logo';
 import { ScrollReveal } from './scroll-reveal';
+import { LandingValueMarquee } from './landing-value-marquee';
 import { useAuth, loginAsDemo, useAuthModal } from '@/lib/auth';
 import { scrollToSection, LANDING_NAV_TARGETS } from '@/lib/navigation/scroll-to-section';
 
@@ -189,9 +190,9 @@ export function AudienceSection({ athletePanelRef, coachPanelRef }: AudienceSect
   };
 
   return (
-    <section id="audience" className="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default select-none">
+    <section id="audience" className="py-7 sm:py-9 md:py-10 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default select-none">
       <div className="w-full scroll-mt-16">
-        <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+        <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           
           {/* Athlete Panel Container - Stable Reference */}
           <div 
@@ -411,27 +412,23 @@ export function AudienceSection({ athletePanelRef, coachPanelRef }: AudienceSect
 
 export function ResponsibleAI() {
   return (
-    <section id="responsible-ai" className="py-10 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default text-center select-none">
+    <section id="responsible-ai" className="pt-7 sm:pt-9 pb-0 border-t border-border-default text-center select-none overflow-hidden">
       {/* Static scroll anchor for orientation observations */}
-      <div data-scroll-anchor="responsible-ai" className="w-full scroll-mt-16 max-w-5xl mx-auto">
+      <div data-scroll-anchor="responsible-ai" className="w-full scroll-mt-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-5 sm:mb-7">
         <ScrollReveal duration={0.5} offset={20}>
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-6">
             <h2 className="text-base font-serif tracking-[0.25em] text-foreground uppercase">
               DECISION SUPPORT. NOT MEDICAL DIAGNOSIS.
             </h2>
             <p className="text-base sm:text-lg text-foreground-secondary leading-relaxed max-w-3xl mx-auto font-normal">
               Ludis is decision-support software. It does not provide medical diagnoses or replace clinical or coaching expertise.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-bold text-foreground-muted tracking-wider uppercase pt-4">
-              <span>EXPLAINABLE</span>
-              <span className="text-border-subtle">•</span>
-              <span>DATA QUALITY AWARE</span>
-              <span className="text-border-subtle">•</span>
-              <span>ATHLETE CONTROLLED</span>
-            </div>
           </div>
         </ScrollReveal>
       </div>
+
+      {/* ── FULL-WIDTH VALUE MARQUEE BANNER ── */}
+      <LandingValueMarquee />
     </section>
   );
 }
@@ -456,7 +453,7 @@ export function FinalCTA() {
   const headlineOpacity = useTransform(scrollYProgress, [0.15, 0.45], [0.6, 1.0]);
 
   return (
-    <section ref={containerRef} className="py-16 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default text-center relative overflow-hidden select-none">
+    <section ref={containerRef} className="py-9 sm:py-11 md:py-12 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default text-center relative overflow-hidden select-none">
       
       {/* Background large Gothic L Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10 select-none">
@@ -469,26 +466,26 @@ export function FinalCTA() {
       </div>
 
       <motion.div 
-        className="max-w-3xl mx-auto space-y-8"
+        className="max-w-3xl mx-auto space-y-5 sm:space-y-6"
         style={{
           y: headlineY,
           opacity: headlineOpacity
         }}
       >
-        <h2 className="text-5xl sm:text-7xl font-serif tracking-tight text-foreground">
+        <h2 className="text-5xl sm:text-7xl font-serif font-medium tracking-normal sm:tracking-[0.02em] [word-spacing:0.12em] leading-[1.1] text-foreground antialiased">
           TRAIN WITH CLARITY.
         </h2>
         <p className="text-lg sm:text-xl text-foreground-secondary max-w-xl mx-auto leading-relaxed">
           Know what changed. Understand why it matters. Decide what to do next.
         </p>
-        <div className="pt-6">
+        <div className="pt-4">
           <motion.button
             whileHover={prefersReduced ? {} : { scale: 1.015, y: -2 }}
             whileTap={{ scale: 0.99 }}
             onClick={() => openSignUp()}
             className="bg-brand hover:bg-brand-hover text-brand-foreground font-semibold text-sm rounded-md px-8 py-3.5 transition-colors duration-150 select-none cursor-pointer text-center animate-none"
           >
-            GET STARTED — FREE
+            GET STARTED FREE
           </motion.button>
         </div>
       </motion.div>
@@ -507,7 +504,7 @@ interface LandingFooterProps {
 
 export function LandingFooter({ onNavigateAthletes, onNavigateCoaches }: LandingFooterProps) {
   return (
-    <footer className="py-10 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default text-xs text-foreground-muted select-none">
+    <footer className="py-6 sm:py-8 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default text-xs text-foreground-muted select-none">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
         
         {/* Left column */}

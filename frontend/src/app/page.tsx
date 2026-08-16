@@ -15,6 +15,7 @@ import {
   FinalCTA,
   LandingFooter,
 } from '@/components/landing/sections';
+import { LandingBackToTop } from '@/components/landing/landing-back-to-top';
 import { scrollPanelToViewportCenter } from '@/lib/navigation/scroll-to-section';
 
 export default function LandingPage() {
@@ -68,6 +69,9 @@ export default function LandingPage() {
         onNavigateAthletes={handleNavigateAthletes} 
         onNavigateCoaches={handleNavigateCoaches} 
       />
+
+      {/* ── FLOATING BACK TO TOP BUTTON ── */}
+      <LandingBackToTop />
     </div>
   );
 }

@@ -116,7 +116,7 @@ export function MvpPillars() {
     <section 
       id="capabilities" 
       ref={containerRef}
-      className="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default select-none"
+      className="py-7 sm:py-9 md:py-10 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default select-none"
     >
       {/* Static scroll anchor wraps grid */}
       <div data-scroll-anchor="capabilities" className="w-full scroll-mt-16">
@@ -126,7 +126,7 @@ export function MvpPillars() {
             y: titleY,
             opacity: titleOpacity
           }}
-          className="text-center max-w-3xl mx-auto mb-24"
+          className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 md:mb-12"
         >
           <h2 className="text-base font-serif tracking-[0.25em] text-foreground uppercase">
             FOUR PILLARS OF PERFORMANCE INTELLIGENCE

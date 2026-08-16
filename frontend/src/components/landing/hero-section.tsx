@@ -137,17 +137,17 @@ export function HeroSection() {
             </HeroReveal>
 
             <HeroReveal delay={0.15} duration={0.6} offset={24}>
-              <h1 className="text-4xl sm:text-[clamp(3.5rem,5.5vw,6rem)] font-serif tracking-tight leading-[1.08] text-foreground">
-                <span className="font-normal italic block">KNOW YOUR</span>
-                <span className="font-normal italic block">BODY.</span>
-                <span className="text-brand font-bold block mt-2">TRAIN</span>
-                <span className="text-brand font-bold block">SMARTER.</span>
+              <h1 className="text-4xl sm:text-[clamp(3.5rem,5.5vw,6rem)] font-serif tracking-normal sm:tracking-[0.01em] leading-[1.08] text-foreground antialiased">
+                <span className="font-semibold italic block">KNOW YOUR</span>
+                <span className="font-semibold italic block">BODY.</span>
+                <span className="text-brand font-extrabold block mt-2 tracking-normal">TRAIN</span>
+                <span className="text-brand font-extrabold block tracking-normal">SMARTER.</span>
               </h1>
             </HeroReveal>
 
             <HeroReveal delay={0.3} duration={0.5} offset={18}>
               <p className="text-base sm:text-lg text-foreground-secondary leading-relaxed max-w-[540px] md:max-w-[600px] font-normal">
-                Turn training and health data into personalized performance, recovery, fatigue and readiness insights — so you can perform at your best, every day.
+                Turn training and health data into personalized performance, recovery, fatigue and readiness insights so you can perform at your best, every day.
               </p>
             </HeroReveal>
 

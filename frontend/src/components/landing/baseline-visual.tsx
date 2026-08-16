@@ -84,11 +84,11 @@ export function BaselineVisual() {
     <section 
       id="baseline" 
       ref={containerRef}
-      className="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default select-none"
+      className="py-7 sm:py-9 md:py-10 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto border-t border-border-default select-none"
     >
       {/* Visual content anchor wraps the actual grid visual container */}
       <div data-scroll-anchor="baseline" className="w-full scroll-mt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           
           {/* Left Column: Typography & Narrative */}
           <div className="lg:col-span-5 space-y-6 text-left">
