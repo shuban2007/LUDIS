@@ -23,6 +23,7 @@ import {
   calculateFatigue,
   calculatePerformance
 } from '@/lib/demo/health-analysis';
+import { fetchAthletePredictions, type PredictionResponse } from '@/lib/api/prediction-client';
 
 export const INITIAL_COACH_PROFILE: CoachProfileData = {
   id: 'coach-martinez',
@@ -111,52 +112,72 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const [sessionProfileOverrides, setSessionProfileOverrides] = useState<SessionProfileOverrides>({});
   const [profileMeasurementLogs, setProfileMeasurementLogs] = useState<ProfileMeasurementLog[]>([]);
 
-  const [googleFitSyncTime, setGoogleFitSyncTime] = useState<string>(() => {
-    const saved = loadDemoState();
-    return saved.googleFitSyncTime || 'Today, 5:42 PM';
+  const [googleFitSyncTime, setGoogleFitSyncTime] = useState<string>('Today, 5:42 PM');
+
+  const [notificationPreferences, setNotificationPreferences] = useState<NotificationPreferences>({
+    performanceAlerts: true,
+    recoveryAlerts: true,
+    trainingReminders: true,
+    competitionReminders: true,
   });
 
-  const [notificationPreferences, setNotificationPreferences] = useState<NotificationPreferences>(() => {
-    const saved = loadDemoState();
-    return saved.notificationPreferences || {
-      performanceAlerts: true,
-      recoveryAlerts: true,
-      trainingReminders: true,
-      competitionReminders: true,
-    };
-  });
+  const [teams, setTeams] = useState<Team[]>([
+    {
+      id: 'team-distance-runners-elite',
+      name: 'Distance Runners Elite',
+      sport: 'Running',
+      description: 'National development distance running squad',
+      status: 'active',
+      coachId: 'coach-martinez',
+      athleteIds: ['ath-001', 'ath-002', 'ath-003', 'ath-004', 'ath-005'],
+      createdAt: new Date().toISOString(),
+    },
+  ]);
 
-  const [teams, setTeams] = useState<Team[]>(() => {
-    const saved = loadDemoState();
-    if (saved.teams && saved.teams.length > 0) return saved.teams;
-    return [
-      {
-        id: 'team-distance-runners-elite',
-        name: 'Distance Runners Elite',
-        sport: 'Running',
-        description: 'National development distance running squad',
-        status: 'active',
-        coachId: 'coach-martinez',
-        athleteIds: ['ath-001', 'ath-002', 'ath-003', 'ath-004', 'ath-005'],
-        createdAt: new Date().toISOString(),
-      },
-    ];
-  });
+  const [teamInvitations, setTeamInvitations] = useState<TeamInvitation[]>([]);
 
-  const [teamInvitations, setTeamInvitations] = useState<TeamInvitation[]>(() => {
-    const saved = loadDemoState();
-    return saved.invitations || [];
-  });
+  const [newAthletes, setNewAthletes] = useState<AthleteData[]>([]);
 
-  const [newAthletes, setNewAthletes] = useState<AthleteData[]>(() => {
-    const saved = loadDemoState();
-    return saved.newAthletes || [];
-  });
+  const [healthMeasurements, setHealthMeasurements] = useState<HealthMeasurement[]>(INITIAL_HEALTH_MEASUREMENTS);
 
-  const [healthMeasurements, setHealthMeasurements] = useState<HealthMeasurement[]>(() => {
+  useEffect(() => {
     const saved = loadDemoState();
-    return saved.healthMeasurements || INITIAL_HEALTH_MEASUREMENTS;
-  });
+    if (saved.googleFitSyncTime) setGoogleFitSyncTime(saved.googleFitSyncTime);
+    if (saved.notificationPreferences) setNotificationPreferences(saved.notificationPreferences);
+    if (saved.teams && saved.teams.length > 0) setTeams(saved.teams);
+    if (saved.invitations) setTeamInvitations(saved.invitations);
+    if (saved.newAthletes) setNewAthletes(saved.newAthletes);
+    if (saved.healthMeasurements) setHealthMeasurements(saved.healthMeasurements);
+  }, []);
+
+  const [predictions, setPredictions] = useState<Record<string, PredictionResponse>>({});
+  const [predictionStatus, setPredictionStatus] = useState<'loading' | 'success' | 'error' | 'missing'>('success');
+  const [predictionError, setPredictionError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadPredictions() {
+      setPredictionStatus('loading');
+      setPredictionError(null);
+      try {
+        const mayaMeasurements = healthMeasurements.filter((m) => m.userId === 'usr-001');
+        const profileOverride = sessionProfileOverrides['ath-001'] || sessionProfileOverrides['usr-001'] || {};
+        const profile = { ...INITIAL_ATHLETES[0].profile, ...profileOverride };
+        
+        const res = await fetchAthletePredictions(mayaMeasurements, profile);
+        if (res.success && res.prediction) {
+            setPredictions(prev => ({ ...prev, 'ath-001': res }));
+            setPredictionStatus('success');
+        } else {
+            setPredictionStatus('error');
+            setPredictionError(res.error || 'Failed to fetch predictions');
+        }
+      } catch (err) {
+        setPredictionStatus('error');
+        setPredictionError(err instanceof Error ? err.message : 'Unknown error');
+      }
+    }
+    loadPredictions();
+  }, [healthMeasurements, sessionProfileOverrides]);
 
   // State Auto-Persistence for Teams / Notifications / HealthTelemetry only (Profile overrides are strictly in-memory)
   useEffect(() => {
@@ -262,19 +283,24 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
 
       if (ath.id !== 'ath-001') return { ...ath, profile: mergedProfile };
 
+      const athPrediction = predictions[ath.id]?.prediction;
+
       const newHistory = [...ath.performance.history];
       const todayStr = 'May 13';
+      const currentPerfScore = athPrediction?.performance?.value ?? performance.score;
 
       const lastEntryIndex = newHistory.findIndex((h) => h.date === todayStr);
       if (lastEntryIndex !== -1) {
-        newHistory[lastEntryIndex] = { date: todayStr, value: performance.score };
+        newHistory[lastEntryIndex] = { date: todayStr, value: currentPerfScore };
       } else {
-        newHistory.push({ date: todayStr, value: performance.score });
+        newHistory.push({ date: todayStr, value: currentPerfScore });
       }
 
       return {
         ...ath,
         profile: mergedProfile,
+        predictionStatus,
+        predictionError: predictionError ?? undefined,
         readiness: {
           score: readiness.score,
           status: readiness.status,
@@ -282,17 +308,18 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
         },
         performance: {
           ...ath.performance,
-          score: performance.score,
+          score: currentPerfScore,
           history: newHistory,
         },
         recovery: {
-          score: recovery.score,
-          status: recovery.status,
+          score: athPrediction?.recovery?.value ?? recovery.score,
+          status: athPrediction?.recovery?.status ?? recovery.status,
         },
         fatigue: {
-          level: fatigue.level,
+          level: athPrediction?.fatigueRisk?.label ?? fatigue.level,
           trend: fatigue.trend,
         },
+        injuryRisk: athPrediction?.injuryRisk?.value ?? ath.injuryRisk ?? 12,
         recommendation: {
           title: recommendationTitle,
           description: recommendationDesc,
@@ -365,7 +392,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     });
 
     return [...mappedInitials, ...mappedNew];
-  }, [healthMeasurements, sessionProfileOverrides, newAthletes]);
+  }, [healthMeasurements, sessionProfileOverrides, predictions, predictionStatus, predictionError, newAthletes]);
 
   // Update Athlete Profile Handler with Smart Height/Weight Measurement Logging
   const updateAthleteProfile = useCallback(

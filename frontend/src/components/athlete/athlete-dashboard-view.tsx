@@ -25,6 +25,8 @@ export function AthleteDashboardView() {
   } = useDemo();
 
   const currentAthlete = getCurrentAthlete();
+  const isLoading = currentAthlete.predictionStatus === 'loading';
+  const isError = currentAthlete.predictionStatus === 'error';
   const [trendRange, setTrendRange] = useState('10 days');
 
   // Expandable Daily Measurements Form state
@@ -199,6 +201,9 @@ export function AthleteDashboardView() {
 
             {/* Date Selector */}
             <div className="inline-flex items-center gap-3 bg-surface-2 border border-border-default px-3.5 py-2.5 rounded-lg text-xs font-medium text-foreground-secondary shadow-sm">
+              {isError && (
+                 <span className="text-danger font-bold uppercase tracking-wider mr-2" title={currentAthlete.predictionError}>ML Offline</span>
+              )}
               <EventsIcon className="w-4 h-4 text-foreground-muted shrink-0" />
               <span className="text-foreground">{greetingDate}</span>
             </div>
@@ -517,7 +522,13 @@ export function AthleteDashboardView() {
               READINESS
             </div>
             <div className="text-4xl sm:text-5xl font-bold font-sans text-brand tabular-nums mt-3">
-              {currentAthlete.readiness.score}
+              {isLoading ? (
+                <span className="animate-pulse">...</span>
+              ) : isError ? (
+                <span className="text-danger text-3xl">ERR</span>
+              ) : (
+                currentAthlete.readiness.score
+              )}
             </div>
             <div className="text-lg font-medium text-foreground mt-1.5">
               {currentAthlete.readiness.status}
@@ -533,7 +544,13 @@ export function AthleteDashboardView() {
               PERFORMANCE
             </div>
             <div className="text-4xl sm:text-5xl font-bold font-sans text-foreground tabular-nums mt-3">
-              {currentAthlete.performance.score}
+              {isLoading ? (
+                <span className="animate-pulse">...</span>
+              ) : isError ? (
+                <span className="text-danger text-3xl">ERR</span>
+              ) : (
+                currentAthlete.performance.score
+              )}
             </div>
             <div className="text-xs text-foreground-muted mt-2">Personal baseline</div>
             <div className="text-xs text-foreground-secondary mt-0.5 font-mono">
@@ -547,7 +564,13 @@ export function AthleteDashboardView() {
               RECOVERY
             </div>
             <div className="text-4xl sm:text-5xl font-bold font-sans text-foreground tabular-nums mt-3">
-              {currentAthlete.recovery.score}
+              {isLoading ? (
+                <span className="animate-pulse">...</span>
+              ) : isError ? (
+                <span className="text-danger text-3xl">ERR</span>
+              ) : (
+                currentAthlete.recovery.score
+              )}
             </div>
             <div className="text-lg font-medium text-brand mt-1.5">
               {currentAthlete.recovery.status}
@@ -560,7 +583,13 @@ export function AthleteDashboardView() {
               FATIGUE
             </div>
             <div className="text-2xl sm:text-3xl font-medium text-foreground mt-4">
-              {currentAthlete.fatigue.level}
+              {isLoading ? (
+                <span className="animate-pulse">...</span>
+              ) : isError ? (
+                <span className="text-danger text-xl">ERR</span>
+              ) : (
+                currentAthlete.fatigue.level
+              )}
             </div>
             <div className="text-xs text-foreground-muted mt-1.5">
               {currentAthlete.fatigue.trend}

@@ -93,6 +93,8 @@ export interface AthleteData {
     kinematicSymmetry: number;
     recoveryRate: number;
   };
+  predictionStatus?: 'loading' | 'success' | 'error' | 'missing';
+  predictionError?: string;
 }
 
 export interface DemoNotification {
