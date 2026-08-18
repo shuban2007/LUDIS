@@ -74,6 +74,25 @@ export interface AthleteData {
     date: string;
     time: string;
   };
+
+  acwr?: number;
+  acuteLoad?: number;
+  chronicLoad?: number;
+  injuryRisk?: number;
+  biomarkers?: {
+    cortisol: { current: number; baseline: number; unit: string; status: string };
+    cpk: { current: number; baseline: number; unit: string; status: string };
+    hsCRP: { current: number; baseline: number; unit: string; status: string };
+    ferritin: { current: number; baseline: number; unit: string; status: string };
+    vitaminD: { current: number; baseline: number; unit: string; status: string };
+    testosteroneCortisolRatio: { current: number; baseline: number; status: string };
+  };
+  benchmarkScores?: {
+    aerobicPower: number;
+    peakVelocity: number;
+    kinematicSymmetry: number;
+    recoveryRate: number;
+  };
 }
 
 export interface DemoNotification {
@@ -161,11 +180,29 @@ export const INITIAL_ATHLETES: AthleteData[] = [
         description: 'Workload aligns with training block targets.',
       },
     },
-    competition: {
+        competition: {
       opponent: 'vs Riverview FC',
       date: 'May 18',
       time: '18:30',
     },
+    acwr: 1.15,
+    acuteLoad: 420,
+    chronicLoad: 390,
+    injuryRisk: 12,
+    biomarkers: {
+      cortisol: { current: 18.4, baseline: 15.0, unit: "mcg/dL", status: "moderate" },
+      cpk: { current: 210, baseline: 180, unit: "U/L", status: "optimal" },
+      hsCRP: { current: 1.2, baseline: 1.0, unit: "mg/L", status: "optimal" },
+      ferritin: { current: 65, baseline: 70, unit: "ng/mL", status: "optimal" },
+      vitaminD: { current: 42, baseline: 40, unit: "ng/mL", status: "optimal" },
+      testosteroneCortisolRatio: { current: 0.028, baseline: 0.032, status: "moderate" }
+    },
+    benchmarkScores: {
+      aerobicPower: 82,
+      peakVelocity: 88,
+      kinematicSymmetry: 91,
+      recoveryRate: 85
+    }
   },
   {
     id: 'ath-002',
@@ -241,11 +278,29 @@ export const INITIAL_ATHLETES: AthleteData[] = [
         description: 'Ready for progressive workload step-up.',
       },
     },
-    competition: {
+        competition: {
       opponent: 'at East Valley Open',
       date: 'May 20',
       time: '10:00',
     },
+    acwr: 1.15,
+    acuteLoad: 420,
+    chronicLoad: 390,
+    injuryRisk: 12,
+    biomarkers: {
+      cortisol: { current: 18.4, baseline: 15.0, unit: "mcg/dL", status: "moderate" },
+      cpk: { current: 210, baseline: 180, unit: "U/L", status: "optimal" },
+      hsCRP: { current: 1.2, baseline: 1.0, unit: "mg/L", status: "optimal" },
+      ferritin: { current: 65, baseline: 70, unit: "ng/mL", status: "optimal" },
+      vitaminD: { current: 42, baseline: 40, unit: "ng/mL", status: "optimal" },
+      testosteroneCortisolRatio: { current: 0.028, baseline: 0.032, status: "moderate" }
+    },
+    benchmarkScores: {
+      aerobicPower: 82,
+      peakVelocity: 88,
+      kinematicSymmetry: 91,
+      recoveryRate: 85
+    }
   },
   {
     id: 'ath-003',
@@ -321,11 +376,29 @@ export const INITIAL_ATHLETES: AthleteData[] = [
         description: 'Accumulated fatigue index exceeds safety baseline.',
       },
     },
-    competition: {
+        competition: {
       opponent: 'vs Titans Club',
       date: 'May 24',
       time: '15:30',
     },
+    acwr: 1.15,
+    acuteLoad: 420,
+    chronicLoad: 390,
+    injuryRisk: 12,
+    biomarkers: {
+      cortisol: { current: 18.4, baseline: 15.0, unit: "mcg/dL", status: "moderate" },
+      cpk: { current: 210, baseline: 180, unit: "U/L", status: "optimal" },
+      hsCRP: { current: 1.2, baseline: 1.0, unit: "mg/L", status: "optimal" },
+      ferritin: { current: 65, baseline: 70, unit: "ng/mL", status: "optimal" },
+      vitaminD: { current: 42, baseline: 40, unit: "ng/mL", status: "optimal" },
+      testosteroneCortisolRatio: { current: 0.028, baseline: 0.032, status: "moderate" }
+    },
+    benchmarkScores: {
+      aerobicPower: 82,
+      peakVelocity: 88,
+      kinematicSymmetry: 91,
+      recoveryRate: 85
+    }
   },
   {
     id: 'ath-004',
@@ -401,11 +474,29 @@ export const INITIAL_ATHLETES: AthleteData[] = [
         description: 'Workload parameters are balanced.',
       },
     },
-    competition: {
+        competition: {
       opponent: 'vs Metro Athletic Group',
       date: 'May 28',
       time: '09:00',
     },
+    acwr: 1.15,
+    acuteLoad: 420,
+    chronicLoad: 390,
+    injuryRisk: 12,
+    biomarkers: {
+      cortisol: { current: 18.4, baseline: 15.0, unit: "mcg/dL", status: "moderate" },
+      cpk: { current: 210, baseline: 180, unit: "U/L", status: "optimal" },
+      hsCRP: { current: 1.2, baseline: 1.0, unit: "mg/L", status: "optimal" },
+      ferritin: { current: 65, baseline: 70, unit: "ng/mL", status: "optimal" },
+      vitaminD: { current: 42, baseline: 40, unit: "ng/mL", status: "optimal" },
+      testosteroneCortisolRatio: { current: 0.028, baseline: 0.032, status: "moderate" }
+    },
+    benchmarkScores: {
+      aerobicPower: 82,
+      peakVelocity: 88,
+      kinematicSymmetry: 91,
+      recoveryRate: 85
+    }
   },
   {
     id: 'ath-005',
@@ -481,11 +572,29 @@ export const INITIAL_ATHLETES: AthleteData[] = [
         description: 'Fatigue levels are high, deload suggested.',
       },
     },
-    competition: {
+        competition: {
       opponent: 'at Cascade Invitational',
       date: 'June 02',
       time: '08:00',
     },
+    acwr: 1.15,
+    acuteLoad: 420,
+    chronicLoad: 390,
+    injuryRisk: 12,
+    biomarkers: {
+      cortisol: { current: 18.4, baseline: 15.0, unit: "mcg/dL", status: "moderate" },
+      cpk: { current: 210, baseline: 180, unit: "U/L", status: "optimal" },
+      hsCRP: { current: 1.2, baseline: 1.0, unit: "mg/L", status: "optimal" },
+      ferritin: { current: 65, baseline: 70, unit: "ng/mL", status: "optimal" },
+      vitaminD: { current: 42, baseline: 40, unit: "ng/mL", status: "optimal" },
+      testosteroneCortisolRatio: { current: 0.028, baseline: 0.032, status: "moderate" }
+    },
+    benchmarkScores: {
+      aerobicPower: 82,
+      peakVelocity: 88,
+      kinematicSymmetry: 91,
+      recoveryRate: 85
+    }
   },
 ];
 

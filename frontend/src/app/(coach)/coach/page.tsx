@@ -16,6 +16,11 @@ import { useDemo } from '@/lib/demo/demo-context';
 import type { StatusSeverity } from '@/lib/types';
 import Link from 'next/link';
 
+import { HeadToHeadCompare } from '@/components/coach/head-to-head-compare';
+import { SquadBiomarkerMatrix } from '@/components/coach/squad-biomarker-matrix';
+import { EwmaLoadSimulator } from '@/components/coach/ewma-load-simulator';
+import { DossierExporter } from '@/components/coach/dossier-exporter';
+
 function getReadinessSeverity(score: number): StatusSeverity {
   if (score >= 75) return 'positive';
   if (score >= 55) return 'warning';
@@ -268,6 +273,14 @@ export default function CoachDashboard() {
             </Link>
           ))}
         </div>
+      </motion.section>
+
+      {/* ── Coach Command Center Integrations ── */}
+      <motion.section variants={prefersReduced ? {} : itemVariants} className="pt-8 border-t border-border-subtle space-y-12">
+        <HeadToHeadCompare />
+        <SquadBiomarkerMatrix />
+        <EwmaLoadSimulator />
+        <DossierExporter />
       </motion.section>
     </motion.div>
   );

@@ -30,6 +30,10 @@ export const athleteNavItems: NavItem[] = [
   { label: 'Performance', href: '/athlete/performance', match: 'section', icon: <PerformanceIcon /> },
   { label: 'Recovery', href: '/athlete/recovery', match: 'section', icon: <RecoveryIcon /> },
   { label: 'Fatigue', href: '/athlete/fatigue', match: 'section', icon: <FatigueIcon /> },
+  { label: 'Biomarkers', href: '/athlete/biomarkers', match: 'section', icon: <RecoveryIcon /> },
+  { label: 'Benchmarks', href: '/athlete/benchmarks', match: 'section', icon: <PerformanceIcon /> },
+  { label: 'Wearables', href: '/athlete/wearables', match: 'section', icon: <DashboardIcon /> },
+  { label: 'Copilot', href: '/athlete/copilot', match: 'section', icon: <TeamIcon /> },
   { label: 'Insights', href: '/athlete/insights', match: 'section', icon: <InsightsIcon /> },
   { label: 'Events', href: '/athlete/events', match: 'section', icon: <EventsIcon /> },
   { label: 'Progress', href: '/athlete/progress', match: 'section', icon: <ProgressIcon /> },
@@ -42,8 +46,8 @@ export const athleteMobileNavItems: NavItem[] = [
   athleteNavItems[0], // Dashboard
   athleteNavItems[1], // Performance
   athleteNavItems[2], // Recovery
-  athleteNavItems[4], // Insights
-  athleteNavItems[8], // Profile
+  athleteNavItems[8], // Insights
+  athleteNavItems[12], // Profile
 ];
 
 /** Canonical Coach Navigation Configuration */

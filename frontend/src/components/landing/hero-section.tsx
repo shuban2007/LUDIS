@@ -167,6 +167,54 @@ export function HeroSection() {
                 </button>
               </div>
             </HeroReveal>
+
+            {/* ── ASTRA Global Performance Metrics & Countdowns ── */}
+            <HeroReveal delay={0.55} duration={0.5} offset={16}>
+              <div className="pt-8 mt-8 border-t border-border-subtle max-w-[540px] md:max-w-[600px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                  {/* Countdowns */}
+                  <div className="space-y-4">
+                    <div className="text-xs tracking-widest uppercase font-bold text-brand">Mission Countdowns</div>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1">Cwg 2030 (Ahmedabad)</div>
+                        <div className="font-mono text-xl text-foreground font-bold tabular-nums">
+                          1,248<span className="text-xs font-sans text-foreground-secondary ml-1 font-normal">Days</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-foreground-muted uppercase tracking-wider mb-1">Olympics 2036 (India)</div>
+                        <div className="font-mono text-xl text-foreground font-bold tabular-nums">
+                          3,642<span className="text-xs font-sans text-foreground-secondary ml-1 font-normal">Days</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Global Metrics */}
+                  <div className="space-y-4">
+                    <div className="text-xs tracking-widest uppercase font-bold text-brand">System Telemetry</div>
+                    <div className="grid grid-cols-2 gap-y-4 gap-x-2">
+                      <div>
+                        <div className="text-xl font-sans font-bold text-foreground">15</div>
+                        <div className="text-[10px] text-foreground-muted uppercase mt-0.5">Active Squad</div>
+                      </div>
+                      <div>
+                        <div className="text-xl font-sans font-bold text-foreground">94%</div>
+                        <div className="text-[10px] text-foreground-muted uppercase mt-0.5">Forecast Acc.</div>
+                      </div>
+                      <div>
+                        <div className="text-xl font-sans font-bold text-foreground">&lt;60s</div>
+                        <div className="text-[10px] text-foreground-muted uppercase mt-0.5">Signal Delay</div>
+                      </div>
+                      <div>
+                        <div className="text-xl font-sans font-bold text-foreground">85+</div>
+                        <div className="text-[10px] text-foreground-muted uppercase mt-0.5">Medal Target</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </HeroReveal>
           </motion.div>
 
           {/* ═══════════════════════════════════════════════════════════
